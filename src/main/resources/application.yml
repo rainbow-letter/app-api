@@ -1,4 +1,4 @@
 spring:
   application:
-    name: rainbowletter-api
+    name: ${NAME:rainbowletter-api}
     version: ${VERSION:local}
