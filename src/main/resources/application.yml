@@ -2,3 +2,5 @@ spring:
   application:
     name: ${NAME:rainbowletter-api}
     version: ${VERSION:local}
+server:
+  port: 80
