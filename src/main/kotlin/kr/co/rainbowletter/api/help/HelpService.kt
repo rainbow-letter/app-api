@@ -1,8 +1,8 @@
 package kr.co.rainbowletter.api.help
 
+import kr.co.rainbowletter.api.extensions.ManagementExtension.Companion.uptimeToTime
 import org.springframework.stereotype.Service
 import java.lang.management.ManagementFactory
-import java.util.*
 
 @Service
 class HelpService(
@@ -14,7 +14,8 @@ class HelpService(
         val uptime = ManagementFactory.getRuntimeMXBean().uptime
 
         return HealthResponse(
-            uptime = Date(uptime),
-            info = applicationInfo)
+            uptime = ManagementFactory.getRuntimeMXBean().uptimeToTime(),
+            info = applicationInfo
+        )
     }
 }

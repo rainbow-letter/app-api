@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController
 class HelpController(
     private val helpService: HelpService
 ) {
-
     @GetMapping("/health")
     fun help(): HealthResponse = helpService.health()
 }
