@@ -8,11 +8,7 @@ import java.lang.management.ManagementFactory
 class HelpService(
     private val applicationInfo: ApplicationInfo,
 ) {
-
     fun health(): HealthResponse {
-
-        val uptime = ManagementFactory.getRuntimeMXBean().uptime
-
         return HealthResponse(
             uptime = ManagementFactory.getRuntimeMXBean().uptimeToTime(),
             info = applicationInfo
