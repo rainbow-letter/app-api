@@ -42,7 +42,7 @@ class JwtAuthenticationFilter(
     }
 
     fun getAuthentication(token: String): User? = try {
-        val claims = parser.parseClaimsJws(token).body
+        val claims = parser.parseSignedClaims(token).payload
         User(
             claims.subject as String,
             claims["roles"] as String,
