@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 class AuthenticationAspect {
     @Before("@annotation(RequireAuthentication)")
     fun checkAuthentication() {
-        SecurityContextHolder.getContext().authentication.principal
+        SecurityContextHolder.getContext()?.authentication?.principal
             ?: throw AuthenticationException()
     }
 }

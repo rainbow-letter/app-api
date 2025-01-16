@@ -13,5 +13,5 @@ class AuthController {
 
     @GetMapping("@me")
     @RequireAuthentication
-    fun me(@AuthenticationPrincipal user: User): User = user
+    fun me(@AuthenticationPrincipal user: User) = user.email
 }

@@ -2,6 +2,7 @@ package kr.co.rainbowletter.api.auth
 
 import io.jsonwebtoken.JwtParser
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -12,14 +13,19 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-
+import java.util.*
 
 @Component
 class JwtAuthenticationFilter(
     @Value("\${jwt.secret}") private val jwtSecret: String,
 ) : OncePerRequestFilter() {
 
-    private var parser: JwtParser = Jwts.parser().setSigningKey(jwtSecret)
+    private var parser: JwtParser = Jwts.parser()
+        .verifyWith(
+            Keys.hmacShaKeyFor(
+                Base64.getDecoder().decode(jwtSecret)
+            )
+        ).build()
 
     override fun doFilterInternal(
         request: HttpServletRequest,
