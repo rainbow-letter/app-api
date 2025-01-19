@@ -23,13 +23,6 @@ class ImageController(
         ),
         HttpStatus.CREATED,
     )
-
-    @DeleteMapping
-    fun delete(
-        @RequestParam("file") file: MultipartFile,
-    ) {
-        storageService.create(file)
-    }
 }
 
 data class ImageCreateResponse(
