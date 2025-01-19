@@ -1,5 +1,7 @@
 package kr.co.rainbowletter.api.exception
 
+import kr.co.rainbowletter.api.RainbowletterApiApplication
+import org.springframework.boot.runApplication
 import org.springframework.http.HttpStatus
 
 interface IHttpException {
@@ -9,3 +11,7 @@ interface IHttpException {
 open class ErrorResponse(
     val status: HttpStatus,
 )
+
+fun main(args: Array<String>) {
+    runApplication<RainbowletterApiApplication>(*args)
+}

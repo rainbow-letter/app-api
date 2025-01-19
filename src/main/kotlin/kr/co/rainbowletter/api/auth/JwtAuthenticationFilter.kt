@@ -30,7 +30,7 @@ class JwtAuthenticationFilter(
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         try {
             SecurityContextHolder.getContext().authentication = getAuthentication(request)
@@ -45,7 +45,11 @@ class JwtAuthenticationFilter(
         val claims = parser.parseSignedClaims(token).payload
         User(
             claims.subject as String,
-            claims["roles"] as String,
+            runCatching {
+                Role.valueOf(claims["roles"] as String)
+            }.getOrElse {
+                Role.ROLE_USER
+            },
         )
     } catch (_: Exception) {
         // TODO("로깅 추가하기")

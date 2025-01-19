@@ -5,9 +5,14 @@ import org.springframework.security.core.userdetails.UserDetails
 
 class User(
     val email: String,
-    val roles: String,
+    val role: Role,
 ) : UserDetails {
     override fun getAuthorities(): MutableCollection<GrantedAuthority> = ArrayList()
     override fun getPassword(): String = ""
     override fun getUsername(): String = ""
+}
+
+enum class Role {
+    ROLE_USER,
+    ROLE_ADMIN,
 }
