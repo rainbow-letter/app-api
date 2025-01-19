@@ -12,7 +12,7 @@ class ManagementExtension {
                 (uptime / (1000 * 60 * 60)).toInt(),
                 ((uptime / (1000 * 60)) % 60).toInt(),
                 ((uptime / 1000) % 60).toInt()
-            );
+            )
         }
     }
 }

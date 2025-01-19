@@ -21,6 +21,11 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
+    implementation("io.jsonwebtoken:jjwt:0.12.1")
+    implementation("javax.xml.bind:jaxb-api:2.3.1")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
     implementation("software.amazon.awssdk:s3:2.29.51")
     runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:2.1.0")
