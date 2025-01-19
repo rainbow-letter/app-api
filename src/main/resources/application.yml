@@ -4,3 +4,5 @@ spring:
     version: ${VERSION:local}
 server:
   port: ${PORT:8080}
+jwt:
+  secret: ${JWT_SECRET}
