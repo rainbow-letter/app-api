@@ -1,0 +1,24 @@
+name: Deploy Develop Hatchery
+on:
+  workflow_dispatch:
+
+jobs:
+  BUILD:
+    name: Build & Push
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Fetch Current Source
+        uses: actions/checkout@v4
+
+      - name: ECR Login
+        run: docker login ${{ secrets.ECR_ENDPOINT }} --username=${{ secrets.ECR_USERNAME }} --password=${{ secrets.ECR_PASSWORD }}
+
+      - name: Build
+        run: |
+          docker build -t ${{ secrets.ECR_ENDPOINT }}/rainbowletter-api:develop .
+
+      - name: Push images
+        run: |
+          docker push ${{ secrets.ECR_ENDPOINT }}/rainbowletter-api:develop
+
