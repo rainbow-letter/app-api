@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import picocli.CommandLine
+import kotlin.system.exitProcess
 
 
 @SpringBootApplication
@@ -22,7 +23,7 @@ class ConsoleApplication(
             .addSubcommand("migrate", migrateCommand)
             .execute(*args)
 
-        System.exit(result)
+        exitProcess(result)
     }
 }
 
