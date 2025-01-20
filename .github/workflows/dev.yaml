@@ -23,7 +23,7 @@ jobs:
       - name: Build
         run: |
           docker build \
-           ENV VERSION=${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }} \
+           --build-arg VERSION=${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }} \
            -t ${{ secrets.ECR_ENDPOINT }}/rainbowletter-api:develop .
 
       - name: Push images
