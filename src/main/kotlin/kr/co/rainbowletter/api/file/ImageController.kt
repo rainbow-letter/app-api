@@ -1,5 +1,6 @@
 package kr.co.rainbowletter.api.file
 
+import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.rainbowletter.api.auth.RequireAuthentication
 import org.springframework.http.HttpStatus
@@ -17,6 +18,7 @@ class ImageController(
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @RequireAuthentication
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "이미지 업로드")
     fun create(
         @RequestParam("file") file: MultipartFile,
     ): ResponseEntity<ImageCreateResponse> = ResponseEntity<ImageCreateResponse>(
