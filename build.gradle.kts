@@ -23,6 +23,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("io.jsonwebtoken:jjwt:0.12.1")
     implementation("javax.xml.bind:jaxb-api:2.3.1")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
@@ -33,6 +34,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    runtimeOnly("com.mysql:mysql-connector-j")
 }
 
 kotlin {

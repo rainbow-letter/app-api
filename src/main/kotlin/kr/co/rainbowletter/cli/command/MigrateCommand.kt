@@ -7,6 +7,6 @@ import picocli.CommandLine
 @Component
 class MigrateCommand : Runnable {
     override fun run() {
-        println("runable")
+        println("runnable")
     }
 }
