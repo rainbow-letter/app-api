@@ -3,6 +3,7 @@ package kr.co.rainbowletter.data.entity
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
+import kr.co.rainbowletter.data.entity.has.HasImage
 import java.time.Instant
 
 @Entity
@@ -11,7 +12,7 @@ import java.time.Instant
         Index(name = "idx_user_id", columnList = "user_id")
     ]
 )
-open class LetterEntity {
+open class LetterEntity : HasImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -52,7 +53,7 @@ open class LetterEntity {
 
     @Size(max = 255)
     @Column(name = "image")
-    open var image: String? = null
+    override var image: String? = null
 
     @NotNull
     @Lob

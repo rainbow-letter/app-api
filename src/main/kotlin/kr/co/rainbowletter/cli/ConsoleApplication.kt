@@ -9,9 +9,9 @@ import picocli.CommandLine
 import kotlin.system.exitProcess
 
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = ["kr.co.rainbowletter"])
 @CommandLine.Command(
-    name = "app",
+    name = "migrate",
     subcommands = []
 )
 class ConsoleApplication(

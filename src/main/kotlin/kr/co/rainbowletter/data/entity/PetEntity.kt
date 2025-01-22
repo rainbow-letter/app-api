@@ -3,6 +3,7 @@ package kr.co.rainbowletter.data.entity
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
+import kr.co.rainbowletter.data.entity.has.HasImage
 import java.time.Instant
 import java.time.LocalDate
 
@@ -12,7 +13,7 @@ import java.time.LocalDate
         UniqueConstraint(name = "UK_favorite_id", columnNames = ["favorite_id"])
     ]
 )
-open class PetEntity {
+open class PetEntity : HasImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -38,7 +39,7 @@ open class PetEntity {
 
     @Size(max = 255)
     @Column(name = "image")
-    open var image: String? = null
+    override var image: String? = null
 
     @Size(max = 255)
     @NotNull
