@@ -2,6 +2,10 @@ spring:
   application:
     name: ${NAME:rainbowletter-api}
     version: ${VERSION:local}
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 server:
   port: ${PORT:8080}
 jwt:
@@ -12,4 +16,6 @@ cloud:
     secret-key: ${AWS_SECRET_KEY}
     region: ${AWS_REGION:ap-northeast-2}
     s3:
-      bucket: ${BUCKET_NAME:rainbowletter}
+      bucket: ${BUCKET_NAME}
+    cloudfront:
+      url: ${CLOUDFRONT_URL:https://d2skn8z2mhze4b.cloudfront.net}
