@@ -23,7 +23,7 @@ class ImageController(
         @RequestParam("file") file: MultipartFile,
     ): ResponseEntity<ImageCreateResponse> = ResponseEntity<ImageCreateResponse>(
         ImageCreateResponse(
-            storageService.create(file, "uploads"),
+            storageService.uploadProfileImage(file)
         ),
         HttpStatus.CREATED,
     )
