@@ -10,9 +10,7 @@ import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
-import java.io.File
-import java.io.FileInputStream
-import java.nio.file.Files
+import java.io.InputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -31,14 +29,10 @@ class ImageUploader(
 
     fun uploadImage(file: MultipartFile, category: String): String {
         val filePath = getFilePath(category)
-        var convertedFile: File? = null // WebP로 변환된 파일
-        var originalFile: File? = null // MultipartFile을 변환한 원본 파일
-
         try {
-            originalFile = convertMultipartToFile(file) // 원본 파일 변환
-            convertedFile = convertToWebpWithResize(originalFile, filePath) // WebP 변환
-
-            FileInputStream(convertedFile).use { fileInputStream ->
+            // InputStream에서 직접 변환된 WebP 데이터를 S3에 업로드
+            file.inputStream.use { inputStream ->
+                val webpData = convertToWebpWithResize(inputStream)
                 s3Client.putObject(
                     PutObjectRequest.builder()
                         .bucket(bucket)
@@ -46,40 +40,28 @@ class ImageUploader(
                         .acl(ObjectCannedACL.PUBLIC_READ)
                         .contentType("image/webp")
                         .build(),
-                    RequestBody.fromInputStream(fileInputStream, convertedFile.length())
+                    RequestBody.fromBytes(webpData)
                 )
             }
         } catch (e: Exception) {
             log.error("이미지 업로드 실패", e)
             throw RuntimeException(e.message, e)
-        } finally {
-            deleteLocalFile(originalFile) // 원본 파일 삭제
-            deleteLocalFile(convertedFile) // 변환된 파일 삭제
         }
+
         return getCloudFrontUrl(filePath)
     }
 
-    fun convertToWebpWithResize(originalFile: File, fileName: String): File {
+    fun convertToWebpWithResize(inputStream: InputStream): ByteArray {
         return try {
-            val webpFile = File("$fileName.webp")
-            Files.createDirectories(webpFile.parentFile.toPath())
-
+            // InputStream에서 이미지를 읽어와 WebP로 변환 후 ByteArray로 반환
             ImmutableImage.loader()
-                .fromFile(originalFile)
+                .fromStream(inputStream) // InputStream으로부터 이미지 로드
                 .max(1280, 1280)
-                .output(WebpWriter.DEFAULT, webpFile)
-
-            webpFile
+                .bytes(WebpWriter.DEFAULT)
         } catch (e: Exception) {
             log.error("Webp 변환 실패", e)
             throw RuntimeException(e.message, e)
         }
-    }
-
-    private fun convertMultipartToFile(file: MultipartFile): File {
-        val convFile = File("${System.getProperty("java.io.tmpdir")}/${file.originalFilename}")
-        file.transferTo(convFile)
-        return convFile
     }
 
     private fun getFilePath(category: String): String {
@@ -96,12 +78,6 @@ class ImageUploader(
 
     private fun getCloudFrontUrl(fileKey: String): String {
         return "$cloudFrontUrl/$fileKey"
-    }
-
-    private fun deleteLocalFile(file: File?) {
-        if (file?.exists() == true && !file.delete()) {
-            log.warn { "로컬 파일 삭제 실패: ${file.absolutePath}" }
-        }
     }
 
 }
