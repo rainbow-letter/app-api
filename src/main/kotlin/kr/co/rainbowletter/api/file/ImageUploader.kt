@@ -19,14 +19,10 @@ import java.util.*
 
 @Service
 class ImageUploader(
-    private val s3Client: S3Client
+    private val s3Client: S3Client,
+    @Value("\${cloud.aws.s3.bucket}") private val bucket: String,
+    @Value("\${cloud.aws.cloudfront.url}") private val cloudFrontUrl: String
 ) {
-    @Value("\${cloud.aws.s3.bucket}")
-    lateinit var bucket: String
-
-    @Value("\${cloud.aws.cloudfront.url}")
-    lateinit var cloudFrontUrl: String
-
     private val log = KotlinLogging.logger {}
 
     companion object {
