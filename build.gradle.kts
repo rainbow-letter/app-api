@@ -33,9 +33,6 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    // S3
-    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
-
     // image-webp
     implementation("com.sksamuel.scrimage:scrimage-core:4.3.0")
     implementation("com.sksamuel.scrimage:scrimage-webp:4.3.0")
