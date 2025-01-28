@@ -17,5 +17,3 @@ cloud:
     region: ${AWS_REGION:ap-northeast-2}
     s3:
       bucket: ${BUCKET_NAME}
-    cloudfront:
-      url: ${CLOUDFRONT_URL:https://d2skn8z2mhze4b.cloudfront.net}
