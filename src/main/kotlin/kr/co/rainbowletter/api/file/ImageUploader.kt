@@ -48,7 +48,7 @@ class ImageUploader(
             throw RuntimeException(e.message, e)
         }
 
-        return getCloudFrontUrl(filePath)
+        return filePath
     }
 
     fun convertToWebpWithResize(inputStream: InputStream): ByteArray {
@@ -74,10 +74,6 @@ class ImageUploader(
 
     private fun generateRandomFileNamePrefix(): String {
         return UUID.randomUUID().toString().replace("-", "").substring(0, 16)
-    }
-
-    private fun getCloudFrontUrl(fileKey: String): String {
-        return "$cloudFrontUrl/$fileKey"
     }
 
 }
