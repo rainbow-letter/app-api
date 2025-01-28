@@ -8,11 +8,11 @@ import java.io.InputStream
 
 @Service
 class ImageService(
-    private val storageService: StorageService
+    private val storageService: StorageService,
 ) {
-    fun uploadImage(file: MultipartFile, category: String): String {
+    fun uploadImage(file: MultipartFile, category: String? = null): String {
         val webpData = convertToWebpWithResize(file.inputStream)
-        return storageService.uploadFile(webpData, category)
+        return storageService.uploadFile(webpData, "image/webp", "webp", category)
     }
 
     private fun convertToWebpWithResize(inputStream: InputStream): ByteArray {

@@ -13,8 +13,16 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/api/images")
 @Tag(name = "image")
 class ImageController(
-    private val imageService: ImageService
+    private val imageService: ImageService,
 ) {
+    @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @RequireAuthentication
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "이미지 업로드")
+    fun upload(@RequestParam("file") file: MultipartFile): ResponseEntity<ImageCreateResponse> {
+        return uploadImage(file)
+    }
+
     @PostMapping("/profile", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @RequireAuthentication
     @ResponseStatus(HttpStatus.CREATED)
@@ -31,7 +39,7 @@ class ImageController(
         return uploadImage(file, "letter")
     }
 
-    private fun uploadImage(file: MultipartFile, category: String): ResponseEntity<ImageCreateResponse> {
+    private fun uploadImage(file: MultipartFile, category: String? = null): ResponseEntity<ImageCreateResponse> {
         return ResponseEntity(
             ImageCreateResponse(
                 imageService.uploadImage(file, category)
