@@ -1,9 +1,8 @@
-package kr.co.rainbowletter.data.entity
+package kr.co.rainbowletter.api.data.entity
 
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
-import kr.co.rainbowletter.data.entity.has.HasImage
 import java.time.Instant
 import java.time.LocalDate
 
@@ -13,7 +12,7 @@ import java.time.LocalDate
         UniqueConstraint(name = "UK_favorite_id", columnNames = ["favorite_id"])
     ]
 )
-open class PetEntity : HasImage {
+open class PetEntity : kr.co.rainbowletter.api.data.entity.has.HasImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -28,7 +27,7 @@ open class PetEntity : HasImage {
     @NotNull
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "favorite_id", nullable = false)
-    open var favorite: FavoriteEntity? = null
+    open var favorite: kr.co.rainbowletter.api.data.entity.FavoriteEntity? = null
 
     @Column(name = "updated_at")
     open var updatedAt: Instant? = null

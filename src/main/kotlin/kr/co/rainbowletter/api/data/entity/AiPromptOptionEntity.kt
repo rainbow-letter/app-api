@@ -1,4 +1,4 @@
-package kr.co.rainbowletter.data.entity
+package kr.co.rainbowletter.api.data.entity
 
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull

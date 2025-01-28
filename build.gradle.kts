@@ -29,12 +29,16 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
     implementation("software.amazon.awssdk:s3:2.29.51")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("io.github.microutils:kotlin-logging:3.0.5")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
-    implementation("info.picocli:picocli-spring-boot-starter:4.7.6")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // image-webp
+    implementation("com.sksamuel.scrimage:scrimage-core:4.3.0")
+    implementation("com.sksamuel.scrimage:scrimage-webp:4.3.0")
     runtimeOnly("com.mysql:mysql-connector-j")
 }
 

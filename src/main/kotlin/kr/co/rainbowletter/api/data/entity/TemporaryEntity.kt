@@ -1,4 +1,4 @@
-package kr.co.rainbowletter.data.entity
+package kr.co.rainbowletter.api.data.entity
 
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
@@ -6,8 +6,8 @@ import jakarta.validation.constraints.Size
 import java.time.Instant
 
 @Entity
-@Table(name = "log_event", schema = "rainbowletter")
-open class LogEventEntity {
+@Table(name = "temporary", schema = "rainbowletter")
+open class TemporaryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -17,29 +17,25 @@ open class LogEventEntity {
     open var createdAt: Instant? = null
 
     @NotNull
-    @Column(name = "resource", nullable = false)
-    open var resource: Long? = null
+    @Column(name = "pet_id", nullable = false)
+    open var petId: Long? = null
 
     @Column(name = "updated_at")
     open var updatedAt: Instant? = null
 
-    @Column(name = "user_id")
+    @NotNull
+    @Column(name = "user_id", nullable = false)
     open var userId: Long? = null
 
-    @Size(max = 255)
+    @Size(max = 36)
     @NotNull
-    @Column(name = "category", nullable = false)
-    open var category: String? = null
+    @Column(name = "session_id", nullable = false, length = 36)
+    open var sessionId: String? = null
 
-    @Size(max = 255)
     @NotNull
-    @Column(name = "event", nullable = false)
-    open var event: String? = null
-
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "message", nullable = false)
-    open var message: String? = null
+    @Lob
+    @Column(name = "content", nullable = false)
+    open var content: String? = null
 
     @NotNull
     @Lob
