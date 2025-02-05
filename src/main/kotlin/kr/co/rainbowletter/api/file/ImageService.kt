@@ -22,6 +22,7 @@ class ImageService(
             ImmutableImage
                 .loader()
                 .fromStream(inputStream)
+                .max(1280, 1280)
                 .bytes(WebpWriter.DEFAULT)
         } catch (e: ImageParseException) {
             throw throw ImageUploadException("지원하지 않는 이미지 형식입니다.", e)
