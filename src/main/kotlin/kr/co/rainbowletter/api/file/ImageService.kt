@@ -1,7 +1,9 @@
 package kr.co.rainbowletter.api.file
 
+import com.sksamuel.scrimage.ImageParseException
 import com.sksamuel.scrimage.ImmutableImage
 import com.sksamuel.scrimage.webp.WebpWriter
+import kr.co.rainbowletter.api.exception.ImageUploadException
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.InputStream
@@ -17,11 +19,14 @@ class ImageService(
 
     private fun convertToWebpWithResize(inputStream: InputStream): ByteArray {
         return try {
-            ImmutableImage.loader()
+            ImmutableImage
+                .loader()
                 .fromStream(inputStream)
                 .max(1280, 1280)
                 .bytes(WebpWriter.DEFAULT)
-        } catch (e: Exception) {
+        } catch (e: ImageParseException) {
+            throw throw ImageUploadException("지원하지 않는 이미지 형식입니다.", e)
+        } catch (e: Throwable) {
             throw RuntimeException("이미지 변환 실패", e)
         }
     }
