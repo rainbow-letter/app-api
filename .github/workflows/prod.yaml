@@ -1,11 +1,6 @@
 name: prod
 on:
   workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Enter tag to trigger workflow'
-        required: true
-        default: 'v1.0.0'
 
 jobs:
   BUILD:
