@@ -13,20 +13,39 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/api/images")
 @Tag(name = "image")
 class ImageController(
-    private val storageService: IStorageService,
+    private val imageService: ImageService,
 ) {
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @RequireAuthentication
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "이미지 업로드")
-    fun create(
-        @RequestParam("file") file: MultipartFile,
-    ): ResponseEntity<ImageCreateResponse> = ResponseEntity<ImageCreateResponse>(
-        ImageCreateResponse(
-            storageService.create(file, "uploads"),
-        ),
-        HttpStatus.CREATED,
-    )
+    fun upload(@RequestParam("file") file: MultipartFile): ResponseEntity<ImageCreateResponse> {
+        return uploadImage(file)
+    }
+
+    @PostMapping("/profile", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @RequireAuthentication
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "프로필 이미지 업로드")
+    fun uploadProfileImage(@RequestParam("file") file: MultipartFile): ResponseEntity<ImageCreateResponse> {
+        return uploadImage(file, "profile")
+    }
+
+    @PostMapping("/letter", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @RequireAuthentication
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "편지 이미지 업로드")
+    fun uploadLetterImage(@RequestParam("file") file: MultipartFile): ResponseEntity<ImageCreateResponse> {
+        return uploadImage(file, "letter")
+    }
+
+    private fun uploadImage(file: MultipartFile, category: String? = null): ResponseEntity<ImageCreateResponse> {
+        return ResponseEntity(
+            ImageCreateResponse(
+                imageService.uploadImage(file, category)
+            ), HttpStatus.CREATED
+        )
+    }
 }
 
 data class ImageCreateResponse(
