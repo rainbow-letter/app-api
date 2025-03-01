@@ -42,13 +42,6 @@ dependencies {
     implementation("com.sksamuel.scrimage:scrimage-core:4.3.0")
     implementation("com.sksamuel.scrimage:scrimage-webp:4.3.0")
     runtimeOnly("com.mysql:mysql-connector-j")
-    runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
-}
-
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
-    }
 }
 
 tasks.withType<Test> {
