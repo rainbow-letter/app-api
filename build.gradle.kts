@@ -30,7 +30,7 @@ dependencies {
     implementation("software.amazon.awssdk:s3:2.29.51")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("io.github.microutils:kotlin-logging:3.0.5")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("io.projectreactor:reactor-core")
@@ -44,12 +44,12 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict")
+    }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xno-unused-property")
-    }
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
