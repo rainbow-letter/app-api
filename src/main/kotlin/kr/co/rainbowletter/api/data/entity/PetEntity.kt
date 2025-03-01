@@ -12,7 +12,7 @@ import java.time.LocalDate
         UniqueConstraint(name = "UK_favorite_id", columnNames = ["favorite_id"])
     ]
 )
-open class PetEntity : kr.co.rainbowletter.api.data.entity.has.HasImage {
+open class PetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -38,7 +38,7 @@ open class PetEntity : kr.co.rainbowletter.api.data.entity.has.HasImage {
 
     @Size(max = 255)
     @Column(name = "image")
-    override var image: String? = null
+    open var image: String? = null
 
     @Size(max = 255)
     @NotNull

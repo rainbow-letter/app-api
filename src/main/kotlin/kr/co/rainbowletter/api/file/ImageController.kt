@@ -14,13 +14,7 @@ import org.springframework.web.multipart.MultipartFile
 @Tag(name = "image")
 class ImageController(
     private val imageService: ImageService,
-    private val imageMigrateService: ImageMigrateService,
 ) {
-    @GetMapping("temp")
-    fun download() {
-        imageMigrateService.run()
-    }
-
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @RequireAuthentication
     @ResponseStatus(HttpStatus.CREATED)

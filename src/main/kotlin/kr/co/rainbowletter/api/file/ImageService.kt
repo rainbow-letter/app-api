@@ -17,7 +17,7 @@ class ImageService(
         return storageService.uploadFile(webpData, "image/webp", "webp", category)
     }
 
-    fun convertToWebpWithResize(inputStream: InputStream): ByteArray {
+    private fun convertToWebpWithResize(inputStream: InputStream): ByteArray {
         return try {
             ImmutableImage
                 .loader()
@@ -27,17 +27,6 @@ class ImageService(
         } catch (e: ImageParseException) {
             throw throw ImageUploadException("지원하지 않는 이미지 형식입니다.", e)
         } catch (e: Throwable) {
-            throw RuntimeException("이미지 변환 실패", e)
-        }
-    }
-
-    fun convertToWebpWithResize(bytes: ByteArray): ByteArray {
-        return try {
-            ImmutableImage.loader()
-                .fromBytes(bytes)
-                .max(1280, 1280)
-                .bytes(WebpWriter.DEFAULT)
-        } catch (e: Exception) {
             throw RuntimeException("이미지 변환 실패", e)
         }
     }

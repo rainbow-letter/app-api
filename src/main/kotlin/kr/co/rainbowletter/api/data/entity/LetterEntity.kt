@@ -11,7 +11,7 @@ import java.time.Instant
         Index(name = "idx_user_id", columnList = "user_id")
     ]
 )
-open class LetterEntity : kr.co.rainbowletter.api.data.entity.has.HasImage {
+open class LetterEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -52,7 +52,7 @@ open class LetterEntity : kr.co.rainbowletter.api.data.entity.has.HasImage {
 
     @Size(max = 255)
     @Column(name = "image")
-    override var image: String? = null
+    open var image: String? = null
 
     @NotNull
     @Lob
