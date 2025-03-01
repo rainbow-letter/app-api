@@ -45,7 +45,10 @@ class ImageMigrateService(
     private fun loadImage(path: String, i: Int): Mono<Void> {
         val file = File("/Users/jipark/Workspace/temp/rainbowletter-images/$path")
 
-        if (file.exists()) return Mono.empty()
+        if (file.exists()) {
+            println("[skip] id: $i, path: $path")
+            return Mono.empty()
+        }
 
         file.parentFile?.apply {
             if (!exists()) mkdirs()
