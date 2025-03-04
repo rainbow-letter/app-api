@@ -37,6 +37,11 @@ open class LetterEntity {
     @JoinColumn(name = "user_id", nullable = false)
     open val user: UserEntity? = null
 
+    @NotNull
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "letter_id")
+    open val reply: List<ReplyEntity>? = null
+
     @Size(max = 20)
     @NotNull
     @Column(name = "summary", nullable = false, length = 20)

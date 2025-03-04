@@ -40,11 +40,12 @@ class LetterService(
 
         if (pet.user?.id != userId) throw EntityNotFoundException(PetEntity::class.jvmName, petId)
 
-        return letterRepository.findSlice(PageRequest.of(1, query.limit)) {
+        return letterRepository.findSlice(PageRequest.of(0, query.limit)) {
             select(
                 entity(LetterEntity::class),
             ).from(
                 entity(LetterEntity::class),
+                fetchJoin(LetterEntity::reply),
             ).where(
                 and(
                     query.after?.let { path(LetterEntity::id).lessThan(it) },
@@ -59,11 +60,12 @@ class LetterService(
     override fun findByUserId(
         userId: Long,
         query: RetrieveLetterRequest
-    ) = letterRepository.findSlice(PageRequest.of(1, query.limit)) {
+    ) = letterRepository.findSlice(PageRequest.of(0, query.limit)) {
         select(
             entity(LetterEntity::class),
         ).from(
             entity(LetterEntity::class),
+            fetchJoin(LetterEntity::reply),
         ).where(
             and(
                 query.after?.let { path(LetterEntity::id).lessThan(it) },
