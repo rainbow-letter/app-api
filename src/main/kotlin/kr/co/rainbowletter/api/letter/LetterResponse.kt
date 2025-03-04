@@ -48,7 +48,7 @@ data class LetterReplyResponse(
     val promptType: String,
     val readStatus: String,
     val status: String,
-    val submitTime: Instant,
+    val submitTime: Instant?,
     val content: String,
     val summary: String,
 ) {
@@ -59,7 +59,7 @@ data class LetterReplyResponse(
         promptType = e.promptType!!,
         readStatus = e.readStatus!!,
         status = e.status!!,
-        submitTime = e.submitTime!!,
+        submitTime = e.submitTime,
         content = e.content!!,
         summary = e.summary!!,
     )
