@@ -46,6 +46,8 @@ class LetterService(
             ).from(
                 entity(LetterEntity::class),
                 fetchJoin(LetterEntity::reply),
+                fetchJoin(LetterEntity::user),
+                fetchJoin(LetterEntity::pet),
             ).where(
                 and(
                     query.after?.let { path(LetterEntity::id).lessThan(it) },
@@ -66,6 +68,9 @@ class LetterService(
         ).from(
             entity(LetterEntity::class),
             fetchJoin(LetterEntity::reply),
+            fetchJoin(LetterEntity::user),
+            fetchJoin(LetterEntity::pet),
+            fetchJoin(PetEntity::favorite)
         ).where(
             and(
                 query.after?.let { path(LetterEntity::id).lessThan(it) },
