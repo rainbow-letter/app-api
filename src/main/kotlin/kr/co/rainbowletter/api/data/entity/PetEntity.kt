@@ -27,14 +27,15 @@ open class PetEntity {
     @NotNull
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "favorite_id", nullable = false)
-    open var favorite: kr.co.rainbowletter.api.data.entity.FavoriteEntity? = null
+    open var favorite: FavoriteEntity? = null
 
     @Column(name = "updated_at")
     open var updatedAt: Instant? = null
 
     @NotNull
-    @Column(name = "user_id", nullable = false)
-    open var userId: Long? = null
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    open val user: UserEntity? = null
 
     @Size(max = 255)
     @Column(name = "image")

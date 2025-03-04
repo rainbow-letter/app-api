@@ -7,9 +7,9 @@ import jakarta.servlet.ServletResponse
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.context.annotation.Configuration
+import org.springframework.stereotype.Component
 
-@Configuration
+@Component
 class RequestLogFilter : Filter {
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
@@ -23,7 +23,7 @@ class RequestLogFilter : Filter {
         logger.info("Request: method=${httpRequest.method}, URI=${httpRequest.requestURI}, query=${httpRequest.queryString}")
         logger.info("Headers: ${httpRequest.headerNames.toList().joinToString { "$it=${httpRequest.getHeader(it)}" }}")
         if (isJsonRequest(httpRequest)) {
-            logger.info("Body: ${httpRequest.inputStream.readAllBytes().toString()}")
+            logger.info("Body: ${httpRequest.inputStream.readAllBytes()}")
         }
 
         chain.doFilter(req, res)
