@@ -17,3 +17,11 @@ fun Any.toQueryString(): String {
         }
         .joinToString("&")
 }
+
+fun <T> List<T>.firstOrThrow(exception: Exception): T {
+    return this.firstOrNull() ?: throw exception
+}
+
+fun <T> List<T>.firstOrThrow(action: () -> Exception): T {
+    return this.firstOrNull() ?: throw action()
+}

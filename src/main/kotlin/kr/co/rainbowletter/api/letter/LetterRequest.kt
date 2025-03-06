@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Min
 import org.springdoc.core.annotations.ParameterObject
 
 @ParameterObject
-class RetrieveLetterRequest(
+open class RetrieveLetterRequest(
     @field:Schema(
         example = "10",
         description = "이전페이지 마지막 ID (첫페이지 요청시 미입력)",
