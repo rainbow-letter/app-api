@@ -1,4 +1,4 @@
-package kr.co.rainbowletter.api.pet
+package kr.co.rainbowletter.api.sharedLetter
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -9,17 +9,17 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Tag(name = "shared-letter", description = "무지개에 걸린 편지")
 @RestController
-@Tag(name = "pet")
-@RequestMapping("/api/pets")
-class PetController(
-    private val petService: IPetService,
-) {
+@RequestMapping("/api/shared-letter")
+class SharedLetterController {
+
+    @Operation(summary = "생성")
     @GetMapping
     @RequireAuthentication
-    @Operation(summary = "펫 조회")
-    fun me(@AuthenticationPrincipal user: User): PetCollectResponse =
-        PetCollectResponse(
-            pets = petService.findByUserId(user.userEntity.id!!)
-        )
+    fun createSharedLetter(
+        @AuthenticationPrincipal user: User,
+    ) {
+
+    }
 }
