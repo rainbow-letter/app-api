@@ -1,0 +1,31 @@
+name: prod
+on:
+  workflow_dispatch:
+
+jobs:
+  BUILD:
+    name: Build & Push
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Fetch Current Source
+        uses: actions/checkout@v4
+
+      - name: Set Branch
+        id: vars
+        run: |
+          echo "BRANCH_NAME=$(echo $GITHUB_REF | sed 's/refs\/heads\///')" >> $GITHUB_ENV
+          echo "COMMIT_HASH=${GITHUB_SHA}" >> $GITHUB_ENV
+
+      - name: ECR Login
+        run: docker login ${{ secrets.ECR_ENDPOINT }} --username=${{ secrets.ECR_USERNAME }} --password=${{ secrets.ECR_PASSWORD }}
+
+      - name: Build
+        run: |
+          docker build \
+           --build-arg VERSION=${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }} \
+           -t ${{ secrets.ECR_ENDPOINT }}/rainbowletter-api:production .
+
+      - name: Push images
+        run: |
+          docker push ${{ secrets.ECR_ENDPOINT }}/rainbowletter-api:production
