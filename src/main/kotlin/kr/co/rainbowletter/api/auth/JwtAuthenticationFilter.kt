@@ -6,7 +6,10 @@ import io.jsonwebtoken.security.Keys
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import kr.co.rainbowletter.api.auth.service.IUserService
 import kr.co.rainbowletter.api.extensions.ServletRequestExtension.Companion.getBearerToken
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -18,7 +21,9 @@ import java.util.*
 @Component
 class JwtAuthenticationFilter(
     @Value("\${jwt.secret}") private val jwtSecret: String,
+    private val userService: IUserService,
 ) : OncePerRequestFilter() {
+    private val _logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     private var parser: JwtParser = Jwts.parser()
         .verifyWith(
@@ -50,9 +55,10 @@ class JwtAuthenticationFilter(
             }.getOrElse {
                 Role.ROLE_USER
             },
+            userService.findByEmail(claims.subject as String)
         )
-    } catch (_: Exception) {
-        // TODO("로깅 추가하기")
+    } catch (ex: Exception) {
+        _logger.error("auth fail", ex)
         null
     }
 

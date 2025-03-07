@@ -23,25 +23,31 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
     implementation("io.jsonwebtoken:jjwt:0.12.1")
     implementation("javax.xml.bind:jaxb-api:2.3.1")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
     implementation("software.amazon.awssdk:s3:2.29.51")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("io.github.microutils:kotlin-logging:3.0.5")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("io.projectreactor:reactor-core")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
+
     // image-webp
     implementation("com.sksamuel.scrimage:scrimage-core:4.3.0")
     implementation("com.sksamuel.scrimage:scrimage-webp:4.3.0")
-}
+    runtimeOnly("com.mysql:mysql-connector-j")
 
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
-    }
+    implementation("com.linecorp.kotlin-jdsl:jpql-dsl:3.5.5")
+    implementation("com.linecorp.kotlin-jdsl:jpql-render:3.5.5")
+    implementation("com.linecorp.kotlin-jdsl:spring-data-jpa-support:3.5.5")
 }
 
 tasks.withType<Test> {

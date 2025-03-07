@@ -1,7 +1,5 @@
 package kr.co.rainbowletter.api.config
 
-import kr.co.rainbowletter.api.auth.CorsFilter
-import kr.co.rainbowletter.api.auth.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -9,16 +7,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.*
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(
-    private val jwtAuthenticationFilter: JwtAuthenticationFilter,
-    private val corsFilter: CorsFilter,
-) {
+class SecurityConfig {
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
@@ -26,11 +19,10 @@ class SecurityConfig(
 
     @Bean
     @Throws(Exception::class)
-    fun filterChain(http: HttpSecurity, introspector: HandlerMappingIntrospector?): SecurityFilterChain {
-        return http
-            .csrf { o -> o.disable() }
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
-            .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter::class.java)
-            .build()
-    }
+    fun filterChain(
+        http: HttpSecurity,
+        introspector: HandlerMappingIntrospector?,
+    ) = http
+        .csrf { o -> o.disable() }
+        .build()!!
 }

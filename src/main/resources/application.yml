@@ -2,12 +2,33 @@ spring:
   application:
     name: ${NAME:rainbowletter-api}
     version: ${VERSION:local}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: ${SHOW_SQL:false}
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: ${DATABASE_DRIVER:com.mysql.cj.jdbc.Driver}
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
 server:
   port: ${PORT:8080}
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+    defaultModelsExpandDepth: -1
+    display-request-duration: true
 jwt:
   secret: ${JWT_SECRET}
 cloud:
