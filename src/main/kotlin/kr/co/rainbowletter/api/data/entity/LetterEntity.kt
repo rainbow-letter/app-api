@@ -25,15 +25,22 @@ open class LetterEntity {
     open var createdAt: LocalDateTime? = null
 
     @NotNull
-    @Column(name = "pet_id", nullable = false)
-    open var petId: Long? = null
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "pet_id", nullable = false)
+    open val pet: PetEntity? = null
 
     @Column(name = "updated_at")
     open var updatedAt: LocalDateTime? = null
 
     @NotNull
-    @Column(name = "user_id", nullable = false)
-    open var userId: Long? = null
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    open val user: UserEntity? = null
+
+    @NotNull
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "letter_id")
+    open val reply: List<ReplyEntity>? = null
 
     @Size(max = 20)
     @NotNull
