@@ -51,6 +51,8 @@ class LetterService(
             ).where(
                 and(
                     query.after?.let { path(LetterEntity::id).lessThan(it) },
+                    query.startDate?.let { path(LetterEntity::createdAt).greaterThan(it) },
+                    query.endDate?.let { path(LetterEntity::createdAt).lessThan(it) },
                     path(LetterEntity::pet).eq(pet),
                 )
             ).orderBy(
@@ -74,6 +76,8 @@ class LetterService(
         ).where(
             and(
                 query.after?.let { path(LetterEntity::id).lessThan(it) },
+                query.startDate?.let { path(LetterEntity::createdAt).greaterThan(it) },
+                query.endDate?.let { path(LetterEntity::createdAt).lessThan(it) },
                 path(LetterEntity::user)(UserEntity::id).eq(userId),
             )
         ).orderBy(
