@@ -1,10 +1,9 @@
 package kr.co.rainbowletter.api.letter
 
-import kr.co.rainbowletter.api.data.entity.LetterEntity
-import kr.co.rainbowletter.api.data.entity.ReplyEntity
+import kr.co.rainbowletter.api.data.entity.*
 import kr.co.rainbowletter.api.pet.PetResponse
 import kr.co.rainbowletter.api.util.PaginationInfo
-import java.time.Instant
+import java.time.LocalDateTime
 
 data class LetterCollectResponse(
     val letters: List<LetterResponse>,
@@ -21,7 +20,7 @@ data class LetterCollectResponse(
 
 data class LetterResponse(
     val id: Long,
-    val createdAt: Instant,
+    val createdAt: LocalDateTime,
     val pet: PetResponse,
     val summary: String,
     val content: String,
@@ -42,13 +41,13 @@ data class LetterResponse(
 }
 
 data class LetterReplyResponse(
-    val createdAt: Instant,
+    val createdAt: LocalDateTime,
     val inspection: Boolean,
-    val inspectionTime: Instant,
-    val promptType: String,
-    val readStatus: String,
-    val status: String,
-    val submitTime: Instant?,
+    val inspectionTime: LocalDateTime,
+    val promptType: PromptType,
+    val readStatus: ReplyReadStatus,
+    val status: ReplyStatus,
+    val submitTime: LocalDateTime?,
     val content: String,
     val summary: String,
 ) {
