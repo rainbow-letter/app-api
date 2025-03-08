@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import kr.co.rainbowletter.api.data.entity.enums.RecipientType
-import java.time.Instant
+import java.time.LocalDateTime
 
 @Entity
 @Table(
@@ -12,11 +12,11 @@ import java.time.Instant
         Index(name = "created_at__IDX", columnList = "created_at")
     ]
 )
-open class SharedLetterEntity {
+open class SharedLetterEntity : IHasOwner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    open var id: Long? = null
+    override var id: Long? = null
 
     @Column(name = "recipient_type", columnDefinition = "tinyint UNSIGNED not null")
     open var recipientType: RecipientType? = null
@@ -29,7 +29,7 @@ open class SharedLetterEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    open var user: UserEntity? = null
+    override var user: UserEntity? = null
 
     @Size(max = 56)
     @NotNull
@@ -39,10 +39,10 @@ open class SharedLetterEntity {
     @NotNull
     @Lob
     @Column(name = "created_at")
-    open var createdAt: Instant? = null
+    open var createdAt: LocalDateTime? = null
 
     @NotNull
     @Lob
     @Column(name = "updated_at")
-    open var updatedAt: Instant? = null
+    open var updatedAt: LocalDateTime? = null
 }

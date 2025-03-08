@@ -6,14 +6,11 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import kr.co.rainbowletter.api.auth.RequireAuthentication
 import kr.co.rainbowletter.api.auth.User
-import kr.co.rainbowletter.api.data.entity.LetterEntity
-import kr.co.rainbowletter.api.exception.EntityNotFoundException
 import kr.co.rainbowletter.api.util.extension.getUrlWithoutQuery
 import kr.co.rainbowletter.api.util.extension.toQueryString
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
-import kotlin.reflect.jvm.jvmName
 
 @Tag(name = "letter")
 @RestController
@@ -27,11 +24,7 @@ class LetterController(
     fun findById(
         @PathVariable letterId: Long,
         @AuthenticationPrincipal user: User,
-    ): LetterResponse {
-        val letter = letterService.findById(letterId)
-        if (letter.user?.id != user.userEntity.id) throw EntityNotFoundException(LetterEntity::class.jvmName, letterId)
-        return LetterResponse(letter)
-    }
+    ): LetterResponse = LetterResponse(letterService.findById(letterId, user.userEntity))
 
     @Operation(summary = "펫ID 로 작성한 편지 조회")
     @GetMapping("/pets/{petId}/letters")

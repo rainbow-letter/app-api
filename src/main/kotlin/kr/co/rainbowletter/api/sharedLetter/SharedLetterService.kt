@@ -1,8 +1,68 @@
 package kr.co.rainbowletter.api.sharedLetter
 
+import kr.co.rainbowletter.api.data.entity.HasOwnerExtension.Companion.throwIfDenied
+import kr.co.rainbowletter.api.data.entity.LetterEntity
+import kr.co.rainbowletter.api.data.entity.SharedLetterEntity
+import kr.co.rainbowletter.api.data.entity.UserEntity
+import kr.co.rainbowletter.api.data.repository.PetRepository
+import kr.co.rainbowletter.api.data.repository.RepositoryExtension.Companion.findByIdOrThrow
+import kr.co.rainbowletter.api.data.repository.SharedLetterRepository
+import org.springframework.data.domain.PageRequest
+import org.springframework.stereotype.Service
+
 interface ISharedLetterService {
-    fun create()
+    fun create(
+        petId: Long,
+        user: UserEntity,
+        payload: CreateSharedLetterRequest,
+    ): SharedLetterEntity
+
+    fun retrieve(
+        userId: Long?,
+        query: RetrieveSharedLetterRequest,
+    ): List<SharedLetterEntity>
 }
 
-class SharedLetterService {
+@Service
+class SharedLetterService(
+    private val sharedLetterRepository: SharedLetterRepository,
+    private val petRepository: PetRepository,
+) : ISharedLetterService {
+    override fun create(
+        petId: Long,
+        user: UserEntity,
+        payload: CreateSharedLetterRequest,
+    ): SharedLetterEntity {
+        val pet = petRepository.findByIdOrThrow(petId).throwIfDenied(user)
+        val sharedLetter = SharedLetterEntity().apply {
+            recipientType = payload.recipientType
+            content = payload.content
+            this.pet = pet
+            this.user = user
+        }
+
+        return sharedLetterRepository.save(sharedLetter)
+    }
+
+    override fun retrieve(
+        userId: Long?,
+        query: RetrieveSharedLetterRequest,
+    ): List<SharedLetterEntity> =
+        sharedLetterRepository.findSlice(PageRequest.of(0, query.limit)) {
+            select(
+                entity(SharedLetterEntity::class),
+            ).from(
+                entity(SharedLetterEntity::class),
+                fetchJoin(LetterEntity::pet),
+            ).where(
+                and(
+                    query.after?.let { path(SharedLetterEntity::id).greaterThan(it) },
+                    query.startDate?.let { path(SharedLetterEntity::createdAt).greaterThan(it) },
+                    query.endDate?.let { path(SharedLetterEntity::createdAt).lessThan(it) },
+                    path(SharedLetterEntity::user)(UserEntity::id).eq(userId),
+                )
+            ).orderBy(
+                path(SharedLetterEntity::id).asc()
+            )
+        }.filterNotNull()
 }

@@ -1,10 +1,12 @@
 package kr.co.rainbowletter.api.letter
 
+import kr.co.rainbowletter.api.data.entity.HasOwnerExtension.Companion.throwIfDenied
 import kr.co.rainbowletter.api.data.entity.LetterEntity
 import kr.co.rainbowletter.api.data.entity.PetEntity
 import kr.co.rainbowletter.api.data.entity.UserEntity
 import kr.co.rainbowletter.api.data.repository.LetterRepository
 import kr.co.rainbowletter.api.data.repository.PetRepository
+import kr.co.rainbowletter.api.data.repository.RepositoryExtension.Companion.findByIdOrThrow
 import kr.co.rainbowletter.api.exception.EntityNotFoundException
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -22,7 +24,10 @@ interface ILetterService {
         query: RetrieveLetterRequest
     ): List<LetterEntity>
 
-    fun findById(id: Long): LetterEntity
+    fun findById(
+        id: Long,
+        user: UserEntity
+    ): LetterEntity
 }
 
 @Service
@@ -85,6 +90,9 @@ class LetterService(
         )
     }.filterNotNull()
 
-    override fun findById(id: Long): LetterEntity =
-        letterRepository.findById(id).orElseThrow { EntityNotFoundException(LetterEntity::class.jvmName, id) }
+    override fun findById(
+        id: Long,
+        user: UserEntity
+    ): LetterEntity =
+        letterRepository.findByIdOrThrow(id).throwIfDenied(user)
 }
