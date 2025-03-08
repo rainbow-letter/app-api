@@ -1,26 +1,30 @@
 package kr.co.rainbowletter.api.scheduler
 
-import kr.co.rainbowletter.api.data.entity.ReplyStatus
-import kr.co.rainbowletter.api.data.repository.LetterRepository
-import kr.co.rainbowletter.api.data.repository.ReplyRepository
+import kr.co.rainbowletter.api.data.repository.LetterRepositoryImpl
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
 class LetterReportService(
-    private val letterRepository: LetterRepository,
-    private val replyRepository: ReplyRepository
+    private val letterRepositoryImpl: LetterRepositoryImpl
 ) {
     fun getDailyLetterReport(): LetterReport {
         val letterStartTime = LocalDateTime.now().minusDays(1).withHour(10).withMinute(0).withSecond(0)
         val letterEndTime = LocalDateTime.now().withHour(9).withMinute(59).withSecond(59)
-        val letterIds = letterRepository.findLetterIdsByCreatedAtBetween(letterStartTime, letterEndTime)
 
-        val totalLetters = letterIds.size.toLong()
-        val inspectionPending = replyRepository.countByInspectionFalseAndLetterIdIn(letterIds)
-        val replySent = replyRepository.countByStatusAndLetterIdIn(ReplyStatus.REPLY, letterIds)
-        val replyFailed = replyRepository.countByStatusAndLetterIdIn(ReplyStatus.CHAT_GPT, letterIds)
+        val letterStats = letterRepositoryImpl.getLetterReportByCreatedAtBetween(letterStartTime, letterEndTime)
 
-        return LetterReport(totalLetters, inspectionPending, replySent, replyFailed, letterStartTime, letterEndTime)
+        println(letterStats)
+        println(letterStartTime)
+        println(letterEndTime)
+
+        return LetterReport(
+            letterStats.totalLetters,
+            letterStats.inspectionPending,
+            letterStats.replySent,
+            letterStats.replyFailed,
+            letterStartTime,
+            letterEndTime
+        )
     }
 }
