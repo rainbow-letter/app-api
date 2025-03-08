@@ -8,15 +8,12 @@ import java.time.LocalDateTime
 class LetterReportService(
     private val letterRepositoryImpl: LetterRepositoryImpl
 ) {
-    fun getDailyLetterReport(): LetterReport {
-        val letterStartTime = LocalDateTime.now().minusDays(1).withHour(10).withMinute(0).withSecond(0)
-        val letterEndTime = LocalDateTime.now().withHour(9).withMinute(59).withSecond(59)
+    fun getDailyLetterReport(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null): LetterReport {
+        val now = LocalDateTime.now()
+        val letterStartTime = startDate ?: now.minusDays(1).withHour(10).withMinute(0).withSecond(0)
+        val letterEndTime = endDate ?: now.withHour(9).withMinute(59).withSecond(59)
 
         val letterStats = letterRepositoryImpl.getLetterReportByCreatedAtBetween(letterStartTime, letterEndTime)
-
-        println(letterStats)
-        println(letterStartTime)
-        println(letterEndTime)
 
         return LetterReport(
             letterStats.totalLetters,
