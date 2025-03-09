@@ -30,7 +30,7 @@ class LetterController(
     ): LetterResponse {
         val letter = letterService.findById(letterId)
         if (letter.user?.id != user.userEntity.id) throw EntityNotFoundException(LetterEntity::class.jvmName, letterId)
-        return LetterResponse(letter)
+        return LetterResponse(letter, 0)
     }
 
     @Operation(summary = "펫ID 로 작성한 편지 조회")
@@ -49,7 +49,7 @@ class LetterController(
             letters,
             lastLetter?.let {
                 request.getUrlWithoutQuery() + "?" + RetrieveLetterRequest(
-                    it.id!!,
+                    it.first.id!!,
                     query.limit,
                 ).toQueryString()
             }
@@ -71,7 +71,7 @@ class LetterController(
             letters,
             lastLetter?.let {
                 request.getUrlWithoutQuery() + "?" + RetrieveLetterRequest(
-                    it.id!!,
+                    it.first.id!!,
                     query.limit,
                 ).toQueryString()
             }

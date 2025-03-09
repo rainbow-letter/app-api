@@ -11,16 +11,17 @@ data class LegacyLetterCollectResponse(
     val paginationInfo: PaginationInfo
 ) {
     constructor(
-        letterEntities: List<LetterEntity>,
+        letters: List<Pair<LetterEntity, Long>>,
         next: String?
     ) : this(
-        letters = letterEntities.map { LegacyLetterResponse(it) },
+        letters = letters.map { LegacyLetterResponse(it.first, it.second) },
         paginationInfo = PaginationInfo(next)
     )
 }
 
 data class LegacyLetterResponse(
     val id: Long,
+    val sequence: Long,
     val number: Int,
     val summary: String,
     val status: String,
@@ -28,8 +29,12 @@ data class LegacyLetterResponse(
     val readStatus: ReplyReadStatus,
     val createdAt: LocalDateTime
 ) {
-    constructor(e: LetterEntity) : this(
+    constructor(
+        e: LetterEntity,
+        sequence: Long
+    ) : this(
         id = e.id!!,
+        sequence = sequence,
         number = e.number!!,
         summary = e.summary!!,
         status = e.status!!,
