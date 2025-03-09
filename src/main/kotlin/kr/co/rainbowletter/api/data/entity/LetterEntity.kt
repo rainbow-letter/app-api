@@ -3,7 +3,7 @@ package kr.co.rainbowletter.api.data.entity
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
-import java.time.Instant
+import java.time.LocalDateTime
 
 @Entity
 @Table(
@@ -22,7 +22,7 @@ open class LetterEntity {
     open var number: Int? = null
 
     @Column(name = "created_at")
-    open var createdAt: Instant? = null
+    open var createdAt: LocalDateTime? = null
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -30,7 +30,7 @@ open class LetterEntity {
     open val pet: PetEntity? = null
 
     @Column(name = "updated_at")
-    open var updatedAt: Instant? = null
+    open var updatedAt: LocalDateTime? = null
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

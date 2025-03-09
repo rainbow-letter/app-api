@@ -3,8 +3,7 @@ package kr.co.rainbowletter.api.data.entity
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
-import org.hibernate.annotations.ColumnDefault
-import java.time.Instant
+import java.time.LocalDateTime
 
 @Entity
 @Table(
@@ -23,10 +22,10 @@ open class ReplyEntity {
     open var inspection: Boolean? = false
 
     @Column(name = "created_at")
-    open var createdAt: Instant? = null
+    open var createdAt: LocalDateTime? = null
 
     @Column(name = "inspection_time")
-    open var inspectionTime: Instant? = null
+    open var inspectionTime: LocalDateTime? = null
 
     @NotNull
     @Column(name = "letter_id", nullable = false)
@@ -37,10 +36,10 @@ open class ReplyEntity {
     open var petId: Long? = null
 
     @Column(name = "submit_time")
-    open var submitTime: Instant? = null
+    open var submitTime: LocalDateTime? = null
 
     @Column(name = "updated_at")
-    open var updatedAt: Instant? = null
+    open var updatedAt: LocalDateTime? = null
 
     @Size(max = 20)
     @NotNull
@@ -53,28 +52,25 @@ open class ReplyEntity {
     open var content: String? = null
 
     @NotNull
-    @Lob
     @Column(name = "prompta", nullable = false)
-    open var prompta: String? = null
+    open var promptA: String? = null
 
     @NotNull
-    @Lob
-    @Column(name = "prompt_type", nullable = false)
-    open var promptType: String? = null
-
-    @NotNull
-    @Lob
-    @Column(name = "read_status", nullable = false)
-    open var readStatus: String? = null
-
-    @NotNull
-    @Lob
-    @Column(name = "status", nullable = false)
-    open var status: String? = null
-
-    @Size(max = 4000)
-    @NotNull
-    @ColumnDefault("''")
     @Column(name = "promptb", nullable = false, length = 4000)
-    open var promptb: String? = null
+    open var promptB: String? = null
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "prompt_type", nullable = false)
+    open var promptType: PromptType? = null
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    open var status: ReplyStatus? = null
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "read_status", nullable = false)
+    open var readStatus: ReplyReadStatus? = null
 }
