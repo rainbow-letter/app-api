@@ -30,6 +30,31 @@ class LetterService(
     private val letterRepository: LetterRepository,
     private val petRepository: PetRepository
 ) : ILetterService {
+    private fun retrieve(
+        query: RetrieveLetterRequest,
+        petId: Long? = null,
+        userId: Long? = null,
+    ): List<LetterEntity> = letterRepository.findSlice(PageRequest.of(0, query.limit)) {
+        select(
+            entity(LetterEntity::class),
+        ).from(
+            entity(LetterEntity::class),
+            fetchJoin(LetterEntity::reply),
+            fetchJoin(LetterEntity::user),
+            fetchJoin(LetterEntity::pet),
+        ).where(
+            and(
+                query.after?.let { path(LetterEntity::id).lessThan(it) },
+                query.startDate?.let { path(LetterEntity::createdAt).greaterThan(it) },
+                query.endDate?.let { path(LetterEntity::createdAt).lessThan(it) },
+                petId?.let { path(LetterEntity::pet)(PetEntity::id).eq(petId) },
+                userId?.let { path(LetterEntity::user)(UserEntity::id).eq(userId) },
+            )
+        ).orderBy(
+            path(LetterEntity::id).desc()
+        )
+    }.filterNotNull()
+
     override fun findByPetId(
         petId: Long,
         userId: Long,
@@ -40,50 +65,32 @@ class LetterService(
 
         if (pet.user?.id != userId) throw EntityNotFoundException(PetEntity::class.jvmName, petId)
 
-        return letterRepository.findSlice(PageRequest.of(0, query.limit)) {
+        val result = retrieve(
+            query = query,
+            petId = pet.id,
+        )
+
+        if (result.isEmpty()) return result
+
+        val maxId = result.maxBy { o -> o.id!! }.id!!
+        val count = letterRepository.findAll(PageRequest.of(0, 1)) {
             select(
-                entity(LetterEntity::class),
-            ).from(
-                entity(LetterEntity::class),
-                fetchJoin(LetterEntity::reply),
-                fetchJoin(LetterEntity::user),
-                fetchJoin(LetterEntity::pet),
-            ).where(
-                and(
-                    query.after?.let { path(LetterEntity::id).lessThan(it) },
-                    query.startDate?.let { path(LetterEntity::createdAt).greaterThan(it) },
-                    query.endDate?.let { path(LetterEntity::createdAt).lessThan(it) },
-                    path(LetterEntity::pet).eq(pet),
-                )
-            ).orderBy(
-                path(LetterEntity::id).desc()
-            )
-        }.filterNotNull()
+                count(LetterEntity::id)
+            ).from(entity(LetterEntity::class))
+        }.firstOrNull() ?: 0
+
+        return result
     }
 
     override fun findByUserId(
         userId: Long,
         query: RetrieveLetterRequest
-    ) = letterRepository.findSlice(PageRequest.of(0, query.limit)) {
-        select(
-            entity(LetterEntity::class),
-        ).from(
-            entity(LetterEntity::class),
-            fetchJoin(LetterEntity::reply),
-            fetchJoin(LetterEntity::user),
-            fetchJoin(LetterEntity::pet),
-            fetchJoin(PetEntity::favorite)
-        ).where(
-            and(
-                query.after?.let { path(LetterEntity::id).lessThan(it) },
-                query.startDate?.let { path(LetterEntity::createdAt).greaterThan(it) },
-                query.endDate?.let { path(LetterEntity::createdAt).lessThan(it) },
-                path(LetterEntity::user)(UserEntity::id).eq(userId),
-            )
-        ).orderBy(
-            path(LetterEntity::id).desc()
+    ): List<LetterEntity> {
+        return retrieve(
+            query = query,
+            petId = userId,
         )
-    }.filterNotNull()
+    }
 
     override fun findById(id: Long): LetterEntity =
         letterRepository.findById(id).orElseThrow { EntityNotFoundException(LetterEntity::class.jvmName, id) }
