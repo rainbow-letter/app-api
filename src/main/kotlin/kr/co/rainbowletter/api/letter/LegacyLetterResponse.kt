@@ -1,9 +1,10 @@
 package kr.co.rainbowletter.api.letter
 
 import kr.co.rainbowletter.api.data.entity.LetterEntity
+import kr.co.rainbowletter.api.data.entity.ReplyReadStatus
 import kr.co.rainbowletter.api.util.PaginationInfo
 import kr.co.rainbowletter.api.util.extension.firstOrThrow
-import java.time.Instant
+import java.time.LocalDateTime
 
 data class LegacyLetterCollectResponse(
     val letters: List<LegacyLetterResponse>,
@@ -24,8 +25,8 @@ data class LegacyLetterResponse(
     val summary: String,
     val status: String,
     val petName: String,
-    val readStatus: String,
-    val createdAt: Instant
+    val readStatus: ReplyReadStatus,
+    val createdAt: LocalDateTime
 ) {
     constructor(e: LetterEntity) : this(
         id = e.id!!,

@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import org.springdoc.core.annotations.ParameterObject
-import java.time.Instant
+import java.time.LocalDateTime
 
 @ParameterObject
 open class RetrieveLetterRequest(
@@ -31,7 +31,7 @@ open class RetrieveLetterRequest(
         description = "검색 시작일시",
         required = false
     )
-    val startDate: Instant? = null,
+    val startDate: LocalDateTime? = null,
 
     @field:Schema(
         example = "2025-02-01T23:59:59Z",
@@ -39,5 +39,5 @@ open class RetrieveLetterRequest(
         description = "한검색 종료일시",
         required = false
     )
-    val endDate: Instant? = null,
+    val endDate: LocalDateTime? = null,
 )
