@@ -6,6 +6,7 @@ import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
 import kr.co.rainbowletter.api.help.ApplicationInfo
+import org.springdoc.core.models.GroupedOpenApi
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
@@ -39,4 +40,22 @@ class SwaggerConfig(
         .components(Components().addSecuritySchemes(securityName, security))
         .addSecurityItem(securityRequirement)
         .info(info)
+
+    @Bean
+    fun userApi(): GroupedOpenApi = GroupedOpenApi.builder()
+        .group("user")
+        .pathsToExclude("/api/admin/**")
+        .addOpenApiCustomizer { o ->
+            o.addSecurityItem(securityRequirement)
+                .info(info)
+        }.build()
+
+    @Bean
+    fun adminApi(): GroupedOpenApi = GroupedOpenApi.builder()
+        .group("admin")
+        .pathsToMatch("/api/admin/**")
+        .addOpenApiCustomizer { o ->
+            o.addSecurityItem(securityRequirement)
+                .info(info)
+        }.build()
 }

@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter
 
 @Component
 class SlackMessageFormatter {
-    fun formatReport(report: LetterReport): String {
+    fun formatReport(report: LetterReportResponse): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
         return """

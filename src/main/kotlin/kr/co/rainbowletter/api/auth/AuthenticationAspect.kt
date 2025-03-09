@@ -9,9 +9,22 @@ import org.springframework.stereotype.Component
 @Aspect
 @Component
 class AuthenticationAspect {
+    private fun getUser(): User? {
+        val user = SecurityContextHolder.getContext()?.authentication?.principal
+
+        return if (user == null) null
+        else user as User
+    }
+
     @Before("@annotation(RequireAuthentication)")
     fun checkAuthentication() {
-        SecurityContextHolder.getContext()?.authentication?.principal
-            ?: throw AuthenticationException()
+        getUser() ?: throw AuthenticationException()
+    }
+
+    @Before("@annotation(RequireAuthenticationWithAdmin)")
+    fun checkAuthenticationWithAdmin() {
+        val user = getUser() ?: throw AuthenticationException()
+
+        user.role == Role.ROLE_ADMIN || throw AuthenticationException()
     }
 }
