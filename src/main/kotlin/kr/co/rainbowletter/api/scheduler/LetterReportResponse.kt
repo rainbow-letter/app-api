@@ -2,7 +2,7 @@ package kr.co.rainbowletter.api.scheduler
 
 import java.time.LocalDateTime
 
-data class LetterReport(
+data class LetterReportResponse(
     val totalLetters: Long, // 총 편지 개수
     val inspectionPending: Long,  // 검수대기
     val replySent: Long,  // 발송완료

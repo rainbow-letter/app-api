@@ -6,16 +6,20 @@ import java.time.LocalDateTime
 
 @Service
 class LetterReportService(
-    private val letterRepositoryImpl: LetterRepositoryImpl
+    private val letterRepositoryImpl: LetterRepositoryImpl,
+    private val slackWebhookService: SlackWebhookService
 ) {
-    fun getDailyLetterReport(startDate: LocalDateTime? = null, endDate: LocalDateTime? = null): LetterReport {
+    fun report(
+        startDate: LocalDateTime? = null,
+        endDate: LocalDateTime? = null
+    ): LetterReportResponse {
         val now = LocalDateTime.now()
         val letterStartTime = startDate ?: now.minusDays(1).withHour(10).withMinute(0).withSecond(0)
         val letterEndTime = endDate ?: now.withHour(9).withMinute(59).withSecond(59)
 
         val letterStats = letterRepositoryImpl.getLetterReportByCreatedAtBetween(letterStartTime, letterEndTime)
 
-        return LetterReport(
+        val report = LetterReportResponse(
             letterStats.totalLetters,
             letterStats.inspectionPending,
             letterStats.replySent,
@@ -23,5 +27,9 @@ class LetterReportService(
             letterStartTime,
             letterEndTime
         )
+
+        slackWebhookService.sendReportToSlack(report)
+
+        return report
     }
 }
