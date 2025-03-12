@@ -46,7 +46,7 @@ class LetterService(
                     entity(LetterEntity::class),
                 ).from(
                     entity(LetterEntity::class),
-                    fetchJoin(LetterEntity::reply),
+                    leftJoin(LetterEntity::reply),
                     fetchJoin(LetterEntity::user),
                     fetchJoin(LetterEntity::pet),
                     fetchJoin(PetEntity::favorite),
