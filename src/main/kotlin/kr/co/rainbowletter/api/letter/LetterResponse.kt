@@ -1,27 +1,28 @@
 package kr.co.rainbowletter.api.letter
 
-import kr.co.rainbowletter.api.data.entity.LetterEntity
-import kr.co.rainbowletter.api.data.entity.ReplyEntity
+import kr.co.rainbowletter.api.data.entity.*
 import kr.co.rainbowletter.api.pet.PetResponse
 import kr.co.rainbowletter.api.util.PaginationInfo
-import java.time.Instant
+import java.time.LocalDateTime
 
 data class LetterCollectResponse(
     val letters: List<LetterResponse>,
     val paginationInfo: PaginationInfo
 ) {
     constructor(
-        letterEntities: List<LetterEntity>,
+        letters: List<Pair<LetterEntity, Long>>,
         next: String?
     ) : this(
-        letters = letterEntities.map { LetterResponse(it) },
+        letters = letters.map { LetterResponse(it.first, it.second) },
         paginationInfo = PaginationInfo(next)
     )
 }
 
+
 data class LetterResponse(
     val id: Long,
-    val createdAt: Instant,
+    val sequence: Long,
+    val createdAt: LocalDateTime,
     val pet: PetResponse,
     val summary: String,
     val content: String,
@@ -29,8 +30,12 @@ data class LetterResponse(
     val image: String?,
     val reply: LetterReplyResponse?,
 ) {
-    constructor(e: LetterEntity) : this(
+    constructor(
+        e: LetterEntity,
+        sequence: Long
+    ) : this(
         id = e.id!!,
+        sequence = sequence,
         createdAt = e.createdAt!!,
         pet = PetResponse(e.pet!!),
         summary = e.summary!!,
@@ -42,13 +47,13 @@ data class LetterResponse(
 }
 
 data class LetterReplyResponse(
-    val createdAt: Instant,
+    val createdAt: LocalDateTime,
     val inspection: Boolean,
-    val inspectionTime: Instant,
-    val promptType: String,
-    val readStatus: String,
-    val status: String,
-    val submitTime: Instant?,
+    val inspectionTime: LocalDateTime,
+    val promptType: PromptType,
+    val readStatus: ReplyReadStatus,
+    val status: ReplyStatus,
+    val submitTime: LocalDateTime?,
     val content: String,
     val summary: String,
 ) {

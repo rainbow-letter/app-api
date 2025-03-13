@@ -37,7 +37,7 @@ class LegacyLetterController(
             letters,
             lastLetter?.let {
                 request.getUrlWithoutQuery() + "?" + RetrieveLetterRequest(
-                    it.id!!,
+                    it.first.id!!,
                     query.limit,
                 ).toQueryString()
             }

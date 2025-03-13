@@ -6,6 +6,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
     show-sql: ${SHOW_SQL:false}
   datasource:
     url: ${DATABASE_URL}
@@ -38,3 +39,7 @@ cloud:
     region: ${AWS_REGION:ap-northeast-2}
     s3:
       bucket: ${BUCKET_NAME}
+
+slack:
+  webhook:
+    url: ${SLACK_WEBHOOK_URL}
