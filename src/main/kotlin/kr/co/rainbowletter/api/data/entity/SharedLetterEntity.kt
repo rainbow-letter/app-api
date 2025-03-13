@@ -4,6 +4,9 @@ import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import kr.co.rainbowletter.api.data.entity.enums.RecipientType
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 
 @Entity
@@ -12,6 +15,7 @@ import java.time.LocalDateTime
         Index(name = "created_at__IDX", columnList = "created_at")
     ]
 )
+@EntityListeners(AuditingEntityListener::class)
 open class SharedLetterEntity : IHasOwner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,13 +40,11 @@ open class SharedLetterEntity : IHasOwner {
     @Column(name = "content", nullable = false, length = 56)
     open var content: String? = null
 
-    @NotNull
-    @Lob
+    @CreatedDate
     @Column(name = "created_at")
     open var createdAt: LocalDateTime? = null
 
-    @NotNull
-    @Lob
+    @LastModifiedDate
     @Column(name = "updated_at")
     open var updatedAt: LocalDateTime? = null
 }

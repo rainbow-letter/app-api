@@ -25,7 +25,7 @@ open class PetEntity : IHasOwner {
     open var createdAt: Instant? = null
 
     @NotNull
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "favorite_id", nullable = false)
     open var favorite: FavoriteEntity? = null
 

@@ -22,18 +22,9 @@ class RequestLogFilter : Filter {
 
         logger.info("Request: method=${httpRequest.method}, URI=${httpRequest.requestURI}, query=${httpRequest.queryString}")
         logger.info("Headers: ${httpRequest.headerNames.toList().joinToString { "$it=${httpRequest.getHeader(it)}" }}")
-        if (isJsonRequest(httpRequest)) {
-            logger.info("Body: ${httpRequest.inputStream.readAllBytes()}")
-        }
 
         chain.doFilter(req, res)
 
         logger.info("Response URI:${httpRequest.requestURI}")
     }
-
-    private fun isJsonRequest(request: HttpServletRequest): Boolean {
-        val contentType = request.contentType
-        return contentType != null && contentType.contains("application/json", ignoreCase = true)
-    }
-
 }

@@ -26,7 +26,7 @@ open class RetrieveLetterRequest(
     val limit: Int = 10,
 
     @field:Schema(
-        example = "2025-02-01T00:00:00Z",
+        example = "2025-02-01 00:00:00.000",
         defaultValue = "null",
         description = "검색 시작일시",
         required = false
@@ -34,7 +34,7 @@ open class RetrieveLetterRequest(
     val startDate: LocalDateTime? = null,
 
     @field:Schema(
-        example = "2025-02-01T23:59:59Z",
+        example = "2025-02-01 00:00:00.000",
         defaultValue = "null",
         description = "한검색 종료일시",
         required = false

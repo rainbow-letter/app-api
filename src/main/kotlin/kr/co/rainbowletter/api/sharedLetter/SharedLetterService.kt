@@ -1,13 +1,11 @@
 package kr.co.rainbowletter.api.sharedLetter
 
 import kr.co.rainbowletter.api.data.entity.HasOwnerExtension.Companion.throwIfDenied
-import kr.co.rainbowletter.api.data.entity.LetterEntity
 import kr.co.rainbowletter.api.data.entity.SharedLetterEntity
 import kr.co.rainbowletter.api.data.entity.UserEntity
 import kr.co.rainbowletter.api.data.repository.PetRepository
 import kr.co.rainbowletter.api.data.repository.RepositoryExtension.Companion.findByIdOrThrow
 import kr.co.rainbowletter.api.data.repository.SharedLetterRepository
-import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 
 interface ISharedLetterService {
@@ -18,8 +16,8 @@ interface ISharedLetterService {
     ): SharedLetterEntity
 
     fun retrieve(
-        userId: Long?,
-        query: RetrieveSharedLetterRequest,
+        user: UserEntity,
+        query: RetrieveSharedLetterByUserIdRequest,
     ): List<SharedLetterEntity>
 }
 
@@ -45,21 +43,20 @@ class SharedLetterService(
     }
 
     override fun retrieve(
-        userId: Long?,
-        query: RetrieveSharedLetterRequest,
+        user: UserEntity,
+        query: RetrieveSharedLetterByUserIdRequest,
     ): List<SharedLetterEntity> =
-        sharedLetterRepository.findSlice(PageRequest.of(0, query.limit)) {
+        sharedLetterRepository.findAll {
             select(
                 entity(SharedLetterEntity::class),
             ).from(
                 entity(SharedLetterEntity::class),
-                fetchJoin(LetterEntity::pet),
+                fetchJoin(SharedLetterEntity::pet),
             ).where(
                 and(
-                    query.after?.let { path(SharedLetterEntity::id).greaterThan(it) },
                     query.startDate?.let { path(SharedLetterEntity::createdAt).greaterThan(it) },
                     query.endDate?.let { path(SharedLetterEntity::createdAt).lessThan(it) },
-                    path(SharedLetterEntity::user)(UserEntity::id).eq(userId),
+                    path(SharedLetterEntity::user).eq(user),
                 )
             ).orderBy(
                 path(SharedLetterEntity::id).asc()
