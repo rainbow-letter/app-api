@@ -43,7 +43,7 @@ class SwaggerConfig(
 
     @Bean
     fun userApi(): GroupedOpenApi = GroupedOpenApi.builder()
-        .group("user")
+        .group("1. user")
         .pathsToExclude("/api/admin/**")
         .addOpenApiCustomizer { o ->
             o.addSecurityItem(securityRequirement)
@@ -52,7 +52,7 @@ class SwaggerConfig(
 
     @Bean
     fun adminApi(): GroupedOpenApi = GroupedOpenApi.builder()
-        .group("admin")
+        .group("2. admin")
         .pathsToMatch("/api/admin/**")
         .addOpenApiCustomizer { o ->
             o.addSecurityItem(securityRequirement)

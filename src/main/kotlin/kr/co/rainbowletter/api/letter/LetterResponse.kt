@@ -10,16 +10,18 @@ data class LetterCollectResponse(
     val paginationInfo: PaginationInfo
 ) {
     constructor(
-        letterEntities: List<LetterEntity>,
+        letters: List<Pair<LetterEntity, Long>>,
         next: String?
     ) : this(
-        letters = letterEntities.map { LetterResponse(it) },
+        letters = letters.map { LetterResponse(it.first, it.second) },
         paginationInfo = PaginationInfo(next)
     )
 }
 
+
 data class LetterResponse(
     val id: Long,
+    val sequence: Long,
     val createdAt: LocalDateTime,
     val pet: PetResponse,
     val summary: String,
@@ -28,8 +30,12 @@ data class LetterResponse(
     val image: String?,
     val reply: LetterReplyResponse?,
 ) {
-    constructor(e: LetterEntity) : this(
+    constructor(
+        e: LetterEntity,
+        sequence: Long
+    ) : this(
         id = e.id!!,
+        sequence = sequence,
         createdAt = e.createdAt!!,
         pet = PetResponse(e.pet!!),
         summary = e.summary!!,
