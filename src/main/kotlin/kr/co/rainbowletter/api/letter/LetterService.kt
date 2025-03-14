@@ -72,6 +72,7 @@ class LetterService(
                 ).where(
                     and(
                         query.after?.let { path(LetterEntity::id).lessThan(it) },
+                        query.endDate?.let { path(LetterEntity::createdAt).lessThan(it) },
                         petId?.let { path(LetterEntity::pet)(PetEntity::id).eq(petId) },
                         userId?.let { path(LetterEntity::user)(UserEntity::id).eq(userId) },
                     )
