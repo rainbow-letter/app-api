@@ -86,7 +86,7 @@ class LetterService(
 
         return result.map {
             val seq = counts.computeIfPresent(it.pet?.id!!) { _, seq -> seq - 1 }
-            Pair(it, seq!! + 1)
+            Pair(it, seq!!)
         }
     }
 
