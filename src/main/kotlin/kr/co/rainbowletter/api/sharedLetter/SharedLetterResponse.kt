@@ -22,7 +22,7 @@ data class SharedLetterResponse(
     val id: Long,
     val content: String,
     val recipientType: RecipientType,
-    val pet: PetResponse
+    val pet: PetResponse?
 ) {
     constructor(e: SharedLetterEntity) : this(
         id = e.id!!,

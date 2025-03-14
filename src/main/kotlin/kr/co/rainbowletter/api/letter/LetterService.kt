@@ -70,7 +70,11 @@ class LetterService(
                 ).from(
                     entity(LetterEntity::class),
                 ).where(
-                    letterRetrieve(query, petId, userId)
+                    and(
+                        query.after?.let { path(LetterEntity::id).lessThan(it) },
+                        petId?.let { path(LetterEntity::pet)(PetEntity::id).eq(petId) },
+                        userId?.let { path(LetterEntity::user)(UserEntity::id).eq(userId) },
+                    )
                 ).groupBy(
                     path(LetterEntity::pet)(PetEntity::id),
                 )
@@ -82,7 +86,7 @@ class LetterService(
 
         return result.map {
             val seq = counts.computeIfPresent(it.pet?.id!!) { _, seq -> seq - 1 }
-            Pair(it, seq!!)
+            Pair(it, seq!! + 1)
         }
     }
 
