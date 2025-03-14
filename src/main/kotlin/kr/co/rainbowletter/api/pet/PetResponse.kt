@@ -26,8 +26,19 @@ data class PetResponse(
     val personalities: List<String>,
     val species: String,
     val owner: String,
-    val favorite: PetFavoriteResponse,
+    val favorite: PetFavoriteResponse?,
 ) {
+    constructor(name: String) : this(
+        id = 0,
+        name = name,
+        deathAnniversary = null,
+        image = "",
+        personalities = emptyList(),
+        species = "",
+        owner = "",
+        favorite = null,
+    )
+
     constructor(petEntity: PetEntity) : this(
         id = petEntity.id!!,
         name = petEntity.name!!,

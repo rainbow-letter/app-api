@@ -12,11 +12,11 @@ import java.time.LocalDate
         UniqueConstraint(name = "UK_favorite_id", columnNames = ["favorite_id"])
     ]
 )
-open class PetEntity {
+open class PetEntity : IHasOwner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    open var id: Long? = null
+    override var id: Long? = null
 
     @Column(name = "death_anniversary")
     open var deathAnniversary: LocalDate? = null
@@ -25,7 +25,7 @@ open class PetEntity {
     open var createdAt: Instant? = null
 
     @NotNull
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "favorite_id", nullable = false)
     open var favorite: FavoriteEntity? = null
 
@@ -35,7 +35,7 @@ open class PetEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    open val user: UserEntity? = null
+    override val user: UserEntity? = null
 
     @Size(max = 255)
     @Column(name = "image")

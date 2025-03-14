@@ -11,11 +11,11 @@ import java.time.LocalDateTime
         Index(name = "idx_user_id", columnList = "user_id")
     ]
 )
-open class LetterEntity {
+open class LetterEntity : IHasOwner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    open var id: Long? = null
+    override var id: Long? = null
 
     @NotNull
     @Column(name = "number", nullable = false)
@@ -35,7 +35,7 @@ open class LetterEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    open val user: UserEntity? = null
+    override val user: UserEntity? = null
 
     @NotNull
     @OneToMany(fetch = FetchType.LAZY)

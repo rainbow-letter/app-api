@@ -1,15 +1,16 @@
 package kr.co.rainbowletter.api.letter
 
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql
+import kr.co.rainbowletter.api.data.entity.HasOwnerExtension.Companion.throwIfDenied
 import kr.co.rainbowletter.api.data.entity.LetterEntity
 import kr.co.rainbowletter.api.data.entity.PetEntity
+import kr.co.rainbowletter.api.data.entity.UserEntity
 import kr.co.rainbowletter.api.data.repository.JpqlExtension
 import kr.co.rainbowletter.api.data.repository.LetterRepository
-import kr.co.rainbowletter.api.exception.EntityNotFoundException
+import kr.co.rainbowletter.api.data.repository.RepositoryExtension.Companion.findByIdOrThrow
 import kr.co.rainbowletter.api.util.extension.toHashMap
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
-import kotlin.reflect.jvm.jvmName
 
 interface ILetterService {
     fun findByPetId(
@@ -23,7 +24,10 @@ interface ILetterService {
         query: RetrieveLetterRequest
     ): List<Pair<LetterEntity, Long>>
 
-    fun findById(id: Long): LetterEntity
+    fun findById(
+        id: Long,
+        user: UserEntity
+    ): LetterEntity
 }
 
 data class PetSequence(
@@ -66,7 +70,12 @@ class LetterService(
                 ).from(
                     entity(LetterEntity::class),
                 ).where(
-                    letterRetrieve(query, petId, userId)
+                    and(
+                        query.after?.let { path(LetterEntity::id).lessThan(it) },
+                        query.endDate?.let { path(LetterEntity::createdAt).lessThan(it) },
+                        petId?.let { path(LetterEntity::pet)(PetEntity::id).eq(petId) },
+                        userId?.let { path(LetterEntity::user)(UserEntity::id).eq(userId) },
+                    )
                 ).groupBy(
                     path(LetterEntity::pet)(PetEntity::id),
                 )
@@ -103,6 +112,9 @@ class LetterService(
         )
     }
 
-    override fun findById(id: Long): LetterEntity =
-        letterRepository.findById(id).orElseThrow { EntityNotFoundException(LetterEntity::class.jvmName, id) }
+    override fun findById(
+        id: Long,
+        user: UserEntity
+    ): LetterEntity =
+        letterRepository.findByIdOrThrow(id).throwIfDenied(user)
 }

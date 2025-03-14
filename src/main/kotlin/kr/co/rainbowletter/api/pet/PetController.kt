@@ -1,6 +1,7 @@
 package kr.co.rainbowletter.api.pet
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import kr.co.rainbowletter.api.auth.RequireAuthentication
 import kr.co.rainbowletter.api.auth.User
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+@Tag(name = "pet")
 @RequestMapping("/api/pets")
 class PetController(
     private val petService: IPetService,
