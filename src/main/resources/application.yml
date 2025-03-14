@@ -6,6 +6,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
     show-sql: ${SHOW_SQL:false}
   datasource:
     url: ${DATABASE_URL}

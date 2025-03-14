@@ -21,12 +21,12 @@ open class RetrieveLetterRequest(
         description = "한페이지 리소스 수 (최대 1000)",
         required = false
     )
-    @Min(1, message = "최소 1이어야 합니다.")
-    @Max(1000, message = "최대 1000을 초과할 수 없습니다.")
+    @field:Min(1, message = "최소 1이어야 합니다.")
+    @field:Max(1000, message = "최대 1000을 초과할 수 없습니다.")
     val limit: Int = 10,
 
     @field:Schema(
-        example = "2025-02-01T00:00:00Z",
+        example = "2025-02-01 00:00:00.000",
         defaultValue = "null",
         description = "검색 시작일시",
         required = false
@@ -34,7 +34,7 @@ open class RetrieveLetterRequest(
     val startDate: LocalDateTime? = null,
 
     @field:Schema(
-        example = "2025-02-01T23:59:59Z",
+        example = "2025-02-01 00:00:00.000",
         defaultValue = "null",
         description = "한검색 종료일시",
         required = false
