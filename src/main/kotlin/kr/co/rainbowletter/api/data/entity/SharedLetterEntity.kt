@@ -4,6 +4,8 @@ import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import kr.co.rainbowletter.api.data.entity.enums.RecipientType
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -15,6 +17,8 @@ import java.time.LocalDateTime
         Index(name = "created_at__IDX", columnList = "created_at")
     ]
 )
+@SQLRestriction("deleted_at is null")
+@SQLDelete(sql = "UPDATE shared_letter SET deleted_at = current_timestamp WHERE id = ?")
 @EntityListeners(AuditingEntityListener::class)
 open class SharedLetterEntity : IHasOwner {
     @Id
@@ -47,4 +51,7 @@ open class SharedLetterEntity : IHasOwner {
     @LastModifiedDate
     @Column(name = "updated_at")
     open var updatedAt: LocalDateTime? = null
+
+    @Column(name = "deleted_at")
+    open var deletedAt: LocalDateTime? = null
 }
