@@ -39,8 +39,10 @@ class SharedLetterController(
     @Operation(summary = "조회")
     @GetMapping("/shared-letters")
     fun retrieve(
+        @AuthenticationPrincipal user: User?,
         @ParameterObject @Valid @ModelAttribute query: RetrieveSharedLetterRequest,
-    ): SharedLetterCollectResponse = SharedLetterCollectResponse(sharedLetterService.retrieve(query), "")
+    ): SharedLetterCollectResponse =
+        SharedLetterCollectResponse(sharedLetterService.retrieve(user?.userEntity, query), "")
 
     @Operation(summary = "샘플 편지 조회")
     @GetMapping("/shared-letters/sample")

@@ -23,6 +23,7 @@ interface ISharedLetterService {
     ): List<SharedLetterEntity>
 
     fun retrieve(
+        user: UserEntity?,
         query: RetrieveSharedLetterRequest
     ): List<SharedLetterEntity>
 }
@@ -69,7 +70,10 @@ class SharedLetterService(
             )
         }.filterNotNull()
 
-    override fun retrieve(query: RetrieveSharedLetterRequest): List<SharedLetterEntity> =
+    override fun retrieve(
+        user: UserEntity?,
+        query: RetrieveSharedLetterRequest
+    ): List<SharedLetterEntity> =
         sharedLetterRepository.findSlice(PageRequest.of(0, query.limit)) {
             select(
                 entity(SharedLetterEntity::class),
@@ -78,6 +82,7 @@ class SharedLetterService(
                 fetchJoin(SharedLetterEntity::pet),
             ).where(
                 and(
+                    user.let { path(SharedLetterEntity::user).notEqual(it) },
                     query.after?.let { path(LetterEntity::id).lessThan(it) },
                     query.startDate?.let { path(SharedLetterEntity::createdAt).greaterThan(it) },
                     query.endDate?.let { path(SharedLetterEntity::createdAt).lessThan(it) },
