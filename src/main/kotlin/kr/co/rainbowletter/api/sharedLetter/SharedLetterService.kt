@@ -6,6 +6,7 @@ import kr.co.rainbowletter.api.data.entity.UserEntity
 import kr.co.rainbowletter.api.data.repository.PetRepository
 import kr.co.rainbowletter.api.data.repository.RepositoryExtension.Companion.findByIdOrThrow
 import kr.co.rainbowletter.api.data.repository.SharedLetterRepository
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 
 interface ISharedLetterService {
@@ -19,6 +20,17 @@ interface ISharedLetterService {
         user: UserEntity,
         query: RetrieveSharedLetterByUserIdRequest,
     ): List<SharedLetterEntity>
+
+    fun retrieve(
+        user: UserEntity?,
+        query: RetrieveSharedLetterRequest
+    ): List<SharedLetterEntity>
+
+    fun retrieve(
+        query: RetrieveSharedLetterAdminRequest
+    ): List<SharedLetterEntity>
+
+    fun delete(letterId: Long)
 }
 
 @Service
@@ -62,4 +74,55 @@ class SharedLetterService(
                 path(SharedLetterEntity::id).asc()
             )
         }.filterNotNull()
+
+    override fun retrieve(
+        user: UserEntity?,
+        query: RetrieveSharedLetterRequest
+    ): List<SharedLetterEntity> =
+        sharedLetterRepository.findSlice(PageRequest.of(0, query.limit)) {
+            select(
+                entity(SharedLetterEntity::class),
+            ).from(
+                entity(SharedLetterEntity::class),
+                fetchJoin(SharedLetterEntity::pet),
+            ).where(
+                and(
+                    query.ids?.let { path(SharedLetterEntity::id).`in`(it) },
+                    user.let { path(SharedLetterEntity::user).notEqual(it) },
+                    query.after?.let { path(SharedLetterEntity::id).lessThan(it) },
+                    query.startDate?.let { path(SharedLetterEntity::createdAt).greaterThan(it) },
+                    query.endDate?.let { path(SharedLetterEntity::createdAt).lessThan(it) },
+                )
+            ).orderBy(
+                if (query.randomSort)
+                    customExpression(String::class, "rand()").asc()
+                else
+                    path(SharedLetterEntity::id).asc()
+            )
+        }.filterNotNull()
+
+    override fun retrieve(query: RetrieveSharedLetterAdminRequest): List<SharedLetterEntity> {
+        return sharedLetterRepository.findSlice(PageRequest.of(0, query.limit)) {
+            select(
+                entity(SharedLetterEntity::class),
+            ).from(
+                entity(SharedLetterEntity::class),
+                fetchJoin(SharedLetterEntity::pet),
+            ).where(
+                and(
+                    query.ids?.let { path(SharedLetterEntity::id).`in`(it) },
+                    query.after?.let { path(SharedLetterEntity::id).lessThan(it) },
+                    query.startDate?.let { path(SharedLetterEntity::createdAt).greaterThan(it) },
+                    query.endDate?.let { path(SharedLetterEntity::createdAt).lessThan(it) },
+                )
+            ).orderBy(
+                path(SharedLetterEntity::id).desc()
+            )
+        }.filterNotNull()
+    }
+
+    override fun delete(letterId: Long) {
+        val letter = sharedLetterRepository.findByIdOrThrow(letterId)
+        sharedLetterRepository.delete(letter)
+    }
 }

@@ -38,7 +38,7 @@ data class RetrieveSharedLetterByUserIdRequest(
     val endDate: LocalDateTime? = null,
 )
 
-data class RetrieveSharedLetterRequest(
+open class RetrieveSharedLetterRequest(
     @field:Schema(
         example = "10",
         description = "이전페이지 마지막 ID (첫페이지 요청시 미입력)",
@@ -56,6 +56,49 @@ data class RetrieveSharedLetterRequest(
     @field:Max(1000, message = "최대 1000을 초과할 수 없습니다.")
     val limit: Int = 10,
 
+    @field:Schema(
+        description = "id 로 조회",
+        required = false
+    )
+    val ids: List<Long>? = null,
+
     val startDate: LocalDateTime? = null,
     val endDate: LocalDateTime? = null,
+
+    val randomSort: Boolean = false,
+)
+
+class RetrieveSharedLetterAdminRequest(
+    @field:Schema(
+        example = "10",
+        description = "이전페이지 마지막 ID (첫페이지 요청시 미입력)",
+        required = false
+    )
+    val after: Long? = null,
+
+    @field:Schema(
+        example = "10",
+        defaultValue = "10",
+        description = "한페이지 리소스 수 (최대 1000)",
+        required = false
+    )
+    @field:Min(1, message = "최소 1이어야 합니다.")
+    @field:Max(1000, message = "최대 1000을 초과할 수 없습니다.")
+    val limit: Int = 10,
+
+    @field:Schema(
+        description = "id 로 조회",
+        required = false
+    )
+    val ids: List<Long>? = null,
+
+    val startDate: LocalDateTime? = null,
+    val endDate: LocalDateTime? = null,
+
+    @field:Schema(
+        example = "true",
+        description = "삭제된 메시지 포함",
+        required = false
+    )
+    val includeDeleted: Boolean = false,
 )
