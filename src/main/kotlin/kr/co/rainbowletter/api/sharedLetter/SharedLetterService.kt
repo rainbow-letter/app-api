@@ -1,7 +1,6 @@
 package kr.co.rainbowletter.api.sharedLetter
 
 import kr.co.rainbowletter.api.data.entity.HasOwnerExtension.Companion.throwIfDenied
-import kr.co.rainbowletter.api.data.entity.LetterEntity
 import kr.co.rainbowletter.api.data.entity.SharedLetterEntity
 import kr.co.rainbowletter.api.data.entity.UserEntity
 import kr.co.rainbowletter.api.data.repository.PetRepository
@@ -82,13 +81,17 @@ class SharedLetterService(
                 fetchJoin(SharedLetterEntity::pet),
             ).where(
                 and(
+                    query.ids?.let { path(SharedLetterEntity::id).`in`(it) },
                     user.let { path(SharedLetterEntity::user).notEqual(it) },
-                    query.after?.let { path(LetterEntity::id).lessThan(it) },
+                    query.after?.let { path(SharedLetterEntity::id).lessThan(it) },
                     query.startDate?.let { path(SharedLetterEntity::createdAt).greaterThan(it) },
                     query.endDate?.let { path(SharedLetterEntity::createdAt).lessThan(it) },
                 )
             ).orderBy(
-                path(SharedLetterEntity::id).asc()
+                if (query.randomSort)
+                    customExpression(String::class, "rand()").asc()
+                else
+                    path(SharedLetterEntity::id).asc()
             )
         }.filterNotNull()
 }

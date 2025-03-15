@@ -56,6 +56,14 @@ data class RetrieveSharedLetterRequest(
     @field:Max(1000, message = "최대 1000을 초과할 수 없습니다.")
     val limit: Int = 10,
 
+    @field:Schema(
+        description = "id 로 조회",
+        required = false
+    )
+    val ids: List<Long>? = null,
+
     val startDate: LocalDateTime? = null,
     val endDate: LocalDateTime? = null,
+
+    val randomSort: Boolean = false,
 )
