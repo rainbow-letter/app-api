@@ -1,15 +1,13 @@
 package kr.co.rainbowletter.api.letter
 
-import com.linecorp.kotlinjdsl.dsl.jpql.jpql
 import kr.co.rainbowletter.api.data.entity.HasOwnerExtension.Companion.throwIfDenied
 import kr.co.rainbowletter.api.data.entity.LetterEntity
-import kr.co.rainbowletter.api.data.entity.PetEntity
 import kr.co.rainbowletter.api.data.entity.UserEntity
-import kr.co.rainbowletter.api.data.repository.JpqlExtension
 import kr.co.rainbowletter.api.data.repository.LetterRepository
+import kr.co.rainbowletter.api.data.repository.LetterRepositoryExtension.Companion.getLastCount
+import kr.co.rainbowletter.api.data.repository.LetterRepositoryExtension.Companion.retrieve
 import kr.co.rainbowletter.api.data.repository.RepositoryExtension.Companion.findByIdOrThrow
 import kr.co.rainbowletter.api.util.extension.toHashMap
-import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 
 interface ILetterService {
@@ -44,46 +42,14 @@ class LetterService(
         petId: Long? = null,
         userId: Long? = null,
     ): List<Pair<LetterEntity, Long>> {
-        val result = letterRepository.findSlice(PageRequest.of(0, query.limit)) {
-            jpql(JpqlExtension()) {
-                select(
-                    entity(LetterEntity::class),
-                ).from(
-                    entity(LetterEntity::class),
-                    leftJoin(LetterEntity::reply),
-                    fetchJoin(LetterEntity::user),
-                    fetchJoin(LetterEntity::pet),
-                    fetchJoin(PetEntity::favorite),
-                ).where(
-                    letterRetrieve(query, petId, userId)
-                ).orderBy(
-                    path(LetterEntity::id).desc()
-                )
-            }
-        }.filterNotNull()
+        val result = letterRepository.retrieve(query, petId, userId)
 
-        val counts = letterRepository.findAll {
-            jpql(JpqlExtension()) {
-                select<PetSequence>(
-                    path(LetterEntity::pet)(PetEntity::id),
-                    count(LetterEntity::id)
-                ).from(
-                    entity(LetterEntity::class),
-                ).where(
-                    and(
-                        query.after?.let { path(LetterEntity::id).lessThan(it) },
-                        query.endDate?.let { path(LetterEntity::createdAt).lessThan(it) },
-                        petId?.let { path(LetterEntity::pet)(PetEntity::id).eq(petId) },
-                        userId?.let { path(LetterEntity::user)(UserEntity::id).eq(userId) },
-                    )
-                ).groupBy(
-                    path(LetterEntity::pet)(PetEntity::id),
-                )
-            }
-        }.toHashMap(
-            key = { o -> o?.petId!! },
-            value = { o -> o?.count!! },
-        )
+        val counts = letterRepository
+            .getLastCount(query.after, query.endDate, petId, userId)
+            .toHashMap(
+                key = { o -> o?.petId!! },
+                value = { o -> o?.count!! },
+            )
 
         return result.map {
             val seq = counts.computeIfPresent(it.pet?.id!!) { _, seq -> seq - 1 }
