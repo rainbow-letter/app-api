@@ -1,4 +1,4 @@
-package kr.co.rainbowletter.api.letter
+package kr.co.rainbowletter.api.letter.controller
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -6,6 +6,10 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import kr.co.rainbowletter.api.auth.RequireAuthentication
 import kr.co.rainbowletter.api.auth.User
+import kr.co.rainbowletter.api.letter.dto.LegacyLetterCollectResponse
+import kr.co.rainbowletter.api.letter.dto.LegacyRetrieveLetterRequest
+import kr.co.rainbowletter.api.letter.dto.RetrieveLetterRequest
+import kr.co.rainbowletter.api.letter.service.ILetterService
 import kr.co.rainbowletter.api.util.extension.getUrlWithoutQuery
 import kr.co.rainbowletter.api.util.extension.toQueryString
 import org.springdoc.core.annotations.ParameterObject

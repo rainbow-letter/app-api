@@ -19,7 +19,12 @@ class StorageService(
 ) {
     private val log = KotlinLogging.logger {}
 
-    fun uploadFile(data: ByteArray, contentType: String, ext: String, category: String? = null): String {
+    fun uploadFile(
+        data: ByteArray,
+        contentType: String,
+        ext: String,
+        category: String? = null
+    ): String {
         val filePath = getFilePath(ext, category)
         try {
             s3Client.putObject(
@@ -41,7 +46,10 @@ class StorageService(
         return filePath
     }
 
-    private fun getFilePath(ext: String, category: String? = null): String {
+    private fun getFilePath(
+        ext: String,
+        category: String? = null
+    ): String {
         val fileName = UUID.randomUUID().toString().replace("-", "").substring(0, 16)
         val datePath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
 

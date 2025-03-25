@@ -5,7 +5,7 @@ import com.linecorp.kotlinjdsl.querymodel.jpql.predicate.Predicate
 import kr.co.rainbowletter.api.data.entity.LetterEntity
 import kr.co.rainbowletter.api.data.entity.PetEntity
 import kr.co.rainbowletter.api.data.entity.UserEntity
-import kr.co.rainbowletter.api.letter.RetrieveLetterRequest
+import kr.co.rainbowletter.api.letter.dto.RetrieveLetterRequest
 
 class JpqlExtension : Jpql() {
     fun letterRetrieve(

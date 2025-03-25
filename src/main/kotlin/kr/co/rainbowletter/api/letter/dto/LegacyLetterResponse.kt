@@ -1,4 +1,4 @@
-package kr.co.rainbowletter.api.letter
+package kr.co.rainbowletter.api.letter.dto
 
 import kr.co.rainbowletter.api.data.entity.LetterEntity
 import kr.co.rainbowletter.api.data.entity.ReplyReadStatus

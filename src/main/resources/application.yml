@@ -43,3 +43,7 @@ cloud:
 slack:
   webhook:
     url: ${SLACK_WEBHOOK_URL}
+
+gpt:
+  key: ${GPT_KEY}
+  model: gpt-4o-mini

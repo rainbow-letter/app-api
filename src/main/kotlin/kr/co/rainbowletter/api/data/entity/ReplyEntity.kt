@@ -28,12 +28,14 @@ open class ReplyEntity {
     open var inspectionTime: LocalDateTime? = null
 
     @NotNull
-    @Column(name = "letter_id", nullable = false)
-    open var letterId: Long? = null
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "letter_id", nullable = false)
+    open var letter: LetterEntity? = null
 
     @NotNull
-    @Column(name = "pet_id", nullable = false)
-    open var petId: Long? = null
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "pet_id", nullable = false)
+    open var pet: PetEntity? = null
 
     @Column(name = "submit_time")
     open var submitTime: LocalDateTime? = null

@@ -1,4 +1,4 @@
-package kr.co.rainbowletter.api.letter
+package kr.co.rainbowletter.api.letter.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Max

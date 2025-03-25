@@ -17,7 +17,10 @@ class LetterRepositoryImpl(
     private val queryFactory: JPAQueryFactory
 ) {
 
-    fun getLetterReportByCreatedAtBetween(start: LocalDateTime, end: LocalDateTime): LetterStats {
+    fun getLetterReportByCreatedAtBetween(
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): LetterStats {
         val letter = QLetterEntity.letterEntity
         val reply = QReplyEntity.replyEntity
 
@@ -32,7 +35,7 @@ class LetterRepositoryImpl(
                 )
             )
             .from(letter)
-            .leftJoin(reply).on(letter.id.eq(reply.letterId))
+            .leftJoin(reply).on(letter.eq(reply.letter))
             .where(
                 letter.createdAt.goe(start),
                 letter.createdAt.lt(end)

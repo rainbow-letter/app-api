@@ -58,6 +58,9 @@ dependencies {
     implementation("com.linecorp.kotlin-jdsl:jpql-dsl:3.5.5")
     implementation("com.linecorp.kotlin-jdsl:jpql-render:3.5.5")
     implementation("com.linecorp.kotlin-jdsl:spring-data-jpa-support:3.5.5")
+
+    implementation("io.github.sashirestela:simple-openai:3.19.4")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }
 
 val generatedQueryDsl = file("src/main/generated")
