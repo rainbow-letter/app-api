@@ -6,6 +6,9 @@ import kr.co.rainbowletter.api.data.entity.UserEntity
 import kr.co.rainbowletter.api.data.repository.PetRepository
 import kr.co.rainbowletter.api.data.repository.RepositoryExtension.Companion.findByIdOrThrow
 import kr.co.rainbowletter.api.data.repository.SharedLetterRepository
+import kr.co.rainbowletter.api.data.repository.SharedLetterRepositoryExtension.Companion.getTodayWriteByPetId
+import kr.co.rainbowletter.api.data.repository.SharedLetterRepositoryExtension.Companion.retrieve
+import kr.co.rainbowletter.api.exception.SharedLetterDuplicatedException
 import org.springframework.stereotype.Service
 
 interface ISharedLetterService {
@@ -19,6 +22,13 @@ interface ISharedLetterService {
         user: UserEntity,
         query: RetrieveSharedLetterByUserIdRequest,
     ): List<SharedLetterEntity>
+
+    fun retrieve(
+        user: UserEntity?,
+        query: RetrieveSharedLetterRequest
+    ): List<SharedLetterEntity>
+
+    fun delete(letterId: Long)
 }
 
 @Service
@@ -31,6 +41,10 @@ class SharedLetterService(
         user: UserEntity,
         payload: CreateSharedLetterRequest,
     ): SharedLetterEntity {
+        if (sharedLetterRepository.getTodayWriteByPetId(petId).isNotEmpty()) {
+            throw SharedLetterDuplicatedException()
+        }
+
         val pet = petRepository.findByIdOrThrow(petId).throwIfDenied(user)
         val sharedLetter = SharedLetterEntity().apply {
             recipientType = payload.recipientType
@@ -45,21 +59,17 @@ class SharedLetterService(
     override fun retrieve(
         user: UserEntity,
         query: RetrieveSharedLetterByUserIdRequest,
-    ): List<SharedLetterEntity> =
-        sharedLetterRepository.findAll {
-            select(
-                entity(SharedLetterEntity::class),
-            ).from(
-                entity(SharedLetterEntity::class),
-                fetchJoin(SharedLetterEntity::pet),
-            ).where(
-                and(
-                    query.startDate?.let { path(SharedLetterEntity::createdAt).greaterThan(it) },
-                    query.endDate?.let { path(SharedLetterEntity::createdAt).lessThan(it) },
-                    path(SharedLetterEntity::user).eq(user),
-                )
-            ).orderBy(
-                path(SharedLetterEntity::id).asc()
-            )
-        }.filterNotNull()
+    ) = sharedLetterRepository.retrieve(user, query.startDate, query.endDate)
+
+    override fun retrieve(
+        user: UserEntity?,
+        query: RetrieveSharedLetterRequest
+    ): List<SharedLetterEntity> = sharedLetterRepository.retrieve(
+        user, query.after, query.startDate, query.endDate, query.ids, query.limit, query.randomSort
+    )
+
+    override fun delete(letterId: Long) {
+        val letter = sharedLetterRepository.findByIdOrThrow(letterId)
+        sharedLetterRepository.delete(letter)
+    }
 }
