@@ -1,33 +1,28 @@
 package kr.co.rainbowletter.api.file
 
-import com.sksamuel.scrimage.ImageParseException
-import com.sksamuel.scrimage.ImmutableImage
-import com.sksamuel.scrimage.webp.WebpWriter
-import kr.co.rainbowletter.api.exception.ImageUploadException
+import kr.co.rainbowletter.api.file.event.ImageUploadEvent
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.io.InputStream
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 @Service
 class ImageService(
-    private val storageService: StorageService,
+    private val applicationEventPublisher: ApplicationEventPublisher
 ) {
     fun uploadImage(file: MultipartFile, category: String? = null): String {
-        val webpData = convertToWebpWithResize(file.inputStream)
-        return storageService.uploadFile(webpData, "image/webp", "webp", category)
+        val filePath = generateFilePath(category)
+        applicationEventPublisher.publishEvent(
+            ImageUploadEvent(file.inputStream, filePath)
+        )
+        return filePath
     }
 
-    private fun convertToWebpWithResize(inputStream: InputStream): ByteArray {
-        return try {
-            ImmutableImage
-                .loader()
-                .fromStream(inputStream)
-                .max(1280, 1280)
-                .bytes(WebpWriter.DEFAULT)
-        } catch (e: ImageParseException) {
-            throw throw ImageUploadException("지원하지 않는 이미지 형식입니다.", e)
-        } catch (e: Throwable) {
-            throw RuntimeException("이미지 변환 실패", e)
-        }
+    private fun generateFilePath(category: String?): String {
+        val fileName = UUID.randomUUID().toString().replace("-", "").substring(0, 16)
+        val datePath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+        return category?.let { "$it/$datePath/$fileName.webp" } ?: "$datePath/$fileName.webp"
     }
 }

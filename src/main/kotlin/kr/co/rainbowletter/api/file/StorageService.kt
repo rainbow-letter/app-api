@@ -8,9 +8,6 @@ import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.model.S3Exception
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 @Service
 class StorageService(
@@ -19,8 +16,7 @@ class StorageService(
 ) {
     private val log = KotlinLogging.logger {}
 
-    fun uploadFile(data: ByteArray, contentType: String, ext: String, category: String? = null): String {
-        val filePath = getFilePath(ext, category)
+    fun uploadFile(data: ByteArray, contentType: String, filePath: String): String {
         try {
             s3Client.putObject(
                 PutObjectRequest.builder()
@@ -39,12 +35,5 @@ class StorageService(
             throw RuntimeException("파일 업로드 중 알 수 없는 오류가 발생했습니다.", e)
         }
         return filePath
-    }
-
-    private fun getFilePath(ext: String, category: String? = null): String {
-        val fileName = UUID.randomUUID().toString().replace("-", "").substring(0, 16)
-        val datePath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
-
-        return category?.let { "$it/$datePath/$fileName.$ext" } ?: "$datePath/$fileName.$ext"
     }
 }
