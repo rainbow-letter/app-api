@@ -25,12 +25,11 @@ class JwtAuthenticationFilter(
 ) : OncePerRequestFilter() {
     private val _logger: Logger = LoggerFactory.getLogger(this::class.java)
 
+    private val signingKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtSecret))
+
     private var parser: JwtParser = Jwts.parser()
-        .verifyWith(
-            Keys.hmacShaKeyFor(
-                Base64.getDecoder().decode(jwtSecret)
-            )
-        ).build()
+        .verifyWith(signingKey)
+        .build()
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -61,6 +60,22 @@ class JwtAuthenticationFilter(
         _logger.error("auth fail", ex)
         null
     }
+
+    fun generateToken(
+        email: String,
+        roles: Role
+    ): String {
+        val now = Date()
+        val expiryDate = Date(now.time + (1000L * 60 * 60 * 24 * 30)) // 1시간 유효
+
+        return Jwts.builder()
+            .claim("roles", roles)
+            .expiration(expiryDate)
+            .subject(email)
+            .signWith(signingKey, Jwts.SIG.HS256)
+            .compact()
+    }
+
 
     fun getAuthentication(request: HttpServletRequest): Authentication {
         val token = request.getBearerToken()
