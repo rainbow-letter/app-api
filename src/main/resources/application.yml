@@ -42,4 +42,7 @@ cloud:
 
 slack:
   webhook:
-    url: ${SLACK_WEBHOOK_URL}
+    url:
+      review: ${SLACK_WEBHOOK_REVIEW_URL}
+      dev: ${SLACK_WEBHOOK_DEV_URL}
+      error: ${SLACK_WEBHOOK_ERROR_URL}
