@@ -1,12 +1,13 @@
-package kr.co.rainbowletter.api.scheduler
+package kr.co.rainbowletter.api.slack
 
 import kr.co.rainbowletter.api.client.SlackReviewClient
+import kr.co.rainbowletter.api.scheduler.LetterReportResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class SlackWebhookService(
+class SlackReviewReportService(
     private val slackMessageFormatter: SlackMessageFormatter,
     private val slackReviewClient: SlackReviewClient
 ) {

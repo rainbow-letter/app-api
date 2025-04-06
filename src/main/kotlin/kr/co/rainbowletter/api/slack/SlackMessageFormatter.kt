@@ -1,5 +1,6 @@
-package kr.co.rainbowletter.api.scheduler
+package kr.co.rainbowletter.api.slack
 
+import kr.co.rainbowletter.api.scheduler.LetterReportResponse
 import org.springframework.stereotype.Component
 import java.time.format.DateTimeFormatter
 
