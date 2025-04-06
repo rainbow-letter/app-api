@@ -5,6 +5,7 @@ import com.sksamuel.scrimage.webp.WebpWriter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kr.co.rainbowletter.api.slack.SlackErrorReportService
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -16,6 +17,7 @@ import java.util.*
 @Service
 class ImageService(
     private val storageService: StorageService,
+    private val slackErrorReportService: SlackErrorReportService
 ) {
     private val logger = KotlinLogging.logger {}
 
@@ -27,7 +29,8 @@ class ImageService(
                 storageService.uploadFile(webpData, "image/webp", filePath)
             } catch (e: Exception) {
                 logger.error(e) { "[이미지 업로드 실패] $filePath" }
-                // TODO: 슬랙 알림 및 자동 재시도 로직 추가
+                slackErrorReportService.sendErrorReportToSlack(filePath, e)
+                // TODO: 자동 재시도 로직 추가
             }
         }
         return filePath
