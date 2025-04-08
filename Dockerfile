@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21-jdk AS build-env
 
 ARG VERSION
-
+USER root
 COPY ./ ./
 RUN ./gradlew bootJar
 
