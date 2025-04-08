@@ -1,13 +1,14 @@
 package kr.co.rainbowletter.api.scheduler
 
 import kr.co.rainbowletter.api.data.repository.LetterRepositoryImpl
+import kr.co.rainbowletter.api.slack.SlackReviewReportService
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
 class LetterReportService(
     private val letterRepositoryImpl: LetterRepositoryImpl,
-    private val slackWebhookService: SlackWebhookService
+    private val slackReviewReportService: SlackReviewReportService
 ) {
     fun report(
         startDate: LocalDateTime? = null,
@@ -28,7 +29,7 @@ class LetterReportService(
             letterEndTime
         )
 
-        slackWebhookService.sendReportToSlack(report)
+        slackReviewReportService.sendReportToSlack(report)
 
         return report
     }
