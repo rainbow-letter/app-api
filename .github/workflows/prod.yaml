@@ -24,8 +24,8 @@ jobs:
         run: |
           docker build \
            --build-arg VERSION=${{ env.BRANCH_NAME }}-${{ env.COMMIT_HASH }} \
-           -t ${{ secrets.ECR_ENDPOINT }}/rainbowletter-api:production .
+           -t rainbowletter/rainbowletter-api:production .
 
       - name: Push images
         run: |
-          docker push ${{ secrets.ECR_ENDPOINT }}/rainbowletter-api:production
+          docker push rainbowletter/rainbowletter-api:production
